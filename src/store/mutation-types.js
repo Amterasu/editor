@@ -1,0 +1,2 @@
+export const APPEND_VNODES = 'APPEND_VNODES'
+export const REMOVE_VNODES = 'REMOVE_VNODES'

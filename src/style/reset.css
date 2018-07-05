@@ -1,0 +1,144 @@
+@charset "UTF-8";
+/*-- 当前变量 --*/
+
+/* @import url(wxCode.css); */
+
+html,
+body,
+div,
+span,
+input,
+button,
+figure,
+i,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+em,
+img,
+strong,
+sub,
+sup,
+tt,
+dd,
+dl,
+dt,
+form,
+label,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+ul,
+ol,
+li,
+p,
+a {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
+}
+
+html,
+body {
+  height: 100%;
+  background: #efefef;
+  color: #555;
+  font-size: 14px;
+  font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+  user-select: none;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+  font-size: 14px;
+  border: 0;
+  outline: none;
+}
+
+button::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner {
+  border: none;
+  padding: 0;
+}
+
+body {
+  font: 14px/1.5 "PingFang SC", "Lantinghei SC", "Microsoft YaHei", "HanHei SC", "Helvetica Neue", "Open Sans", Arial, "Hiragino Sans GB", "微软雅黑", "STHeiti", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+
+img {
+  border: 0;
+}
+
+ul li {
+  list-style-type: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a[class|=btn] {
+  display: inline-block;
+  vertical-align: top;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+i {
+  font-style: normal;
+}
+
+b {
+  font-weight: normal;
+}
+
+main {
+  display: block;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+  color: #333 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #f4f4f4 inset;
+}
+
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+}
