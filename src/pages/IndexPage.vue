@@ -1,19 +1,19 @@
 <template>
-  <div>
+  <div class="editor">
     <nav-bar/>
-    <div style="margin-top:36px">
-      <left-page/>
-      <tool-drawer/>
-      <view-content/>
+    <div class="editor-main">
+      <source-material/>
+      <property-view/>
+      <design-view/>
     </div>
   </div>
 </template>
 
 <script>
 import NavBar from "./NavBar";
-import LeftPage from "./LeftPage";
-import ToolDrawer from "./ToolDrawer";
-import ViewContent from "./ViewContent";
+import SourceMaterial from "./SourceMaterial";
+import PropertyView from "./PropertyView";
+import DesignView from "./DesignView";
 export default {
   data() {
     return {};
@@ -21,9 +21,14 @@ export default {
   methods: {},
   components: {
     NavBar,
-    LeftPage,
-    ToolDrawer,
-    ViewContent
+    SourceMaterial,
+    PropertyView,
+    DesignView
   }
 };
 </script>
+<style lang="scss" scoped>
+.editor-main {
+  margin-top: 36px;
+}
+</style>

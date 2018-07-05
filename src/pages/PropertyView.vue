@@ -1,13 +1,13 @@
 <template>
   <div>
-    <tool-image v-show="currType == 1" />
-    <tool-text v-show="currType == 2" />
+    <property-image v-show="currType == 1" />
+    <property-text v-show="currType == 2" />
   </div>
 </template>
 
 <script>
-import ToolImage from "./ToolImage";
-import ToolText from "./ToolText";
+import PropertyImage from "./PropertyImage";
+import PropertyText from "./PropertyText";
 export default {
   data() {
     return {
@@ -29,8 +29,8 @@ export default {
     }
   },
   components: {
-    ToolImage,
-    ToolText
+    PropertyImage,
+    PropertyText
   }
 };
 </script>

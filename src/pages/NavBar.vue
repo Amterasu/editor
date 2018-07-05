@@ -1,23 +1,22 @@
 <template>
+<!-- 上导航 -->
   <div class="navbar">
-    <div></div>
     <div class="nbContent">
       <div class="designer-view-mid">
-        <button class="btn btn-clear preview-btn" title="预览">
+        <button class="btn preview-btn" title="预览">
           <span class="icon"></span>
           <span class="title">预览</span>
         </button>
-        <button class="btn btn-clear qrCode-btn" title="二维码">
+        <button class="btn qrCode-btn" title="二维码">
           <span class="icon"></span>
           <span class="title">二维码</span>
         </button>
-        <button class="btn btn-clear release-btn" title="发布">
+        <button class="btn release-btn" title="发布">
           <span class="icon"></span>
           <span class="title">发布</span>
         </button>
       </div>
     </div>
-    <div></div>
   </div>
 </template>
 
@@ -66,6 +65,7 @@ export default {
         font-size: 12px;
         color: #fff;
         text-align: left;
+        cursor: pointer;
         &:hover{
           background: #282828;
           color: #ddd;

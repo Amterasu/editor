@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="editor-view">
-      <view-tools :isShowRulerLine.sync="isShowRulerLine" :lineMove.sync="lineMove" :isGird.sync="isGird" @removeRulerLine="removeRulerLine" />
+      <design-tool :isShowRulerLine.sync="isShowRulerLine" :lineMove.sync="lineMove" :isGird.sync="isGird" @removeRulerLine="removeRulerLine" />
       <div id="line_top"></div>
       <div v-show=" hRulerLine && isShowRulerLine" id="line_top" v-for="i in  hRulerLine" :key="'topline_'+i" :ref="'hRulerLine_'+i" @mousedown="changeHDragTarget(i)" style="cursor:move" v-if=" i > delHLineIndex"></div>
       <div class="editor-view_bg" @mousemove="move" @mouseup="stopMove" :style="isDraging?'cursor:pointrer':''">
@@ -13,13 +13,13 @@
           </ul>
         </div>
         <div class="editor-view_contanier" :class="{gird:isGird}">
-          <div class="custom-tree-container">
+          <!-- <div class="custom-tree-container">
             <div class="block">
               <p>使用 render-content</p>
               <el-tree :data="data" default-expand-all :expand-on-click-node="false" :render-content="renderContent" draggable>
               </el-tree>
             </div>
-          </div>
+          </div> -->
         </div>
         <ul id="v_ruler" @mousedown="createVRulerLine">
           <li v-for="i in rulerYScale" :key="i">
@@ -33,7 +33,7 @@
 
 <script>
 import { mapMutations, mapState } from "vuex";
-import viewTools from "./ViewTools";
+import DesignTool from "./DesignTool";
 export default {
   data() {
     return {
@@ -136,7 +136,7 @@ export default {
     })
   },
   components: {
-    viewTools
+    DesignTool
   }
 };
 </script>
