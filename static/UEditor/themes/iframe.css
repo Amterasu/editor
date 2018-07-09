@@ -1,0 +1,370 @@
+/*可以在这里添加你自己的css*/
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  line-height: 1.6;
+  background: #FFF;
+}
+
+* {
+  max-width: 100%!important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box!important;
+  -webkit-box-sizing: border-box!important;
+  word-wrap: break-word!important;
+}
+
+body {
+  -webkit-touch-callout: none;
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  padding: 15px !important;
+  font-size: 16px;
+  overflow-x: hidden;
+  font-family: "微软雅黑", "Microsoft YaHei", Arial, sans-serif;
+  background-color: #FFF;
+  line-height: inherit
+}
+
+body.indicate {
+  background-image: url(http://kol-statics.oss-cn-beijing.aliyuncs.com/account/account/170926196cf047aa05013743fa987512944490.jpg);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: left top;
+}
+
+body {
+  word-break: break-all;
+  word-wrap: break-word;
+  cursor: text;
+}
+
+.KolEditor {
+  overflow: hidden;
+}
+
+
+/* 当前被选中的标签标识 */
+
+.checkSelected {
+  outline: 1px dashed #ff8c00;
+  margin: 1px;
+}
+
+
+/* 操作中标识 */
+
+.executeIng {
+  position: relative;
+}
+
+.executeIng::after {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  content: "处理中...";
+}
+
+.checkSelected img {
+  vertical-align: bottom;
+}
+
+p {
+  clear: both;
+  margin: 0 0;
+  min-height: 1em;
+  white-space: normal;
+  white-space: pre-wrap;
+}
+
+a {
+  color: #607fa6;
+  text-decoration: none
+}
+
+img {
+  *zoom: 1;
+  max-width: 100%;
+  *max-width: 96%;
+  height: auto !important;
+}
+
+iframe {
+  width: 301px !important;
+  border: 0;
+  background-color: none;
+}
+
+iframe,
+.video_iframe {
+  background-color: #000000;
+  width: 100% !important;
+  position: static;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-box-shadow: inset 0 0 16px #645654;
+  /*rgba(60,60,60,0.5)*/
+}
+
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #ddd;
+}
+
+
+/*vote*/
+
+.vote_area {
+  display: block;
+}
+
+.vote_iframe {
+  height: 100%;
+  width: 100% !important;
+  *width: 96% !important;
+}
+
+li.placeholder {
+  position: relative;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+li.placeholder:before {
+  position: absolute;
+  content: " ";
+  width: 0;
+  height: 0;
+  margin-top: -5px;
+  left: 0px;
+  top: -4px;
+  border: 8px solid transparent;
+  border-left-color: red;
+  border-right: none;
+}
+
+.dragged {
+  position: absolute !important;
+  top: 0;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+.hiddenIn135 {
+  display: none;
+}
+
+blockquote {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 3px solid #DBDBDB;
+}
+
+ol,
+ul,
+dl {
+  /* IE7: reset rtl list margin. (#7334) */
+  *margin-right: 0px;
+  /* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+  padding: 0 0 0 30px;
+}
+
+table.noBorderTable td,
+table.noBorderTable th,
+table.noBorderTable caption {
+  border: 1px dashed #ddd;
+}
+
+table {
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  display: table;
+  width: 100%;
+  margin: 0 auto;
+}
+
+td,
+th {
+  word-wrap: break-word;
+  word-break: break-all;
+  padding: 5px 0px;
+  border: 1px solid #DDD
+}
+
+caption {
+  border: 1px dashed #DDD;
+  border-bottom: 0;
+  padding: 3px;
+  text-align: center
+}
+
+th {
+  border-top: 2px solid #BBB;
+  background: #f7f7f7
+}
+
+.ue-table-interlace-color-single {
+  background-color: #fcfcfc
+}
+
+.ue-table-interlace-color-double {
+  background-color: #f7faff
+}
+
+td p {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+}
+
+hr {
+  border: 0px;
+  border-top: 1px solid #ccc;
+}
+
+img:hover {
+  z-index: -1;
+  cursor: pointer;
+}
+
+pre {
+  white-space: pre-wrap;
+  /* CSS 2.1 */
+  word-wrap: break-word;
+  /* IE7 */
+}
+
+.marker {
+  background-color: Yellow;
+}
+
+span[lang] {
+  font-style: italic;
+}
+
+figure {
+  text-align: center;
+  border: solid 1px #ccc;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  margin: 10px 20px;
+  display: inline-block;
+}
+
+figure>figcaption {
+  text-align: center;
+  display: block;
+  /* For IE8 */
+}
+
+em {
+  font-style: italic;
+}
+
+.view {
+  height: 100%;
+}
+
+._135editor {
+  border: 0 none;
+  position: relative;
+}
+
+._135editor .draghandle {
+  position: absolute;
+  background-color: rgba(200, 200, 200, 0.8);
+  color: #333;
+  cursor: move;
+  top: -30px;
+  right: -5px;
+  padding: 3px 5px;
+  font-size: 12px;
+}
+
+.view .active-135item {
+  position: relative;
+}
+
+.view .active-135item:before {
+  position: absolute;
+  content: '';
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  border: 2px dashed red;
+  margin: -5px;
+  z-index: 1000;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+  font-size: 16px
+}
+
+
+/*
+h1,h2,h3,h4,h5,h6{font-weight:bold;}
+h1{font-size:32px;line-height:36px;}
+h2{font-size:27px;line-height:29px;}
+h3{font-size:19px;line-height:23px;}
+h4{font-size:16px;line-height:19px;}
+h5{font-size:14px;line-height:18px;}
+h6{font-size:12px;line-height:14px;}*/
+
+
+/** 微信音乐，微信音频的样式 **/
+
+.db {
+  display: block;
+}
+
+qqmusic {
+  min-height: 60px;
+  width: 100%;
+  border: 1px solid #e7e7eb;
+  margin: 17px 1px 16px 0;
+  display: block;
+  background-image: url('default/images/icon_qqmusic_audio_default.png');
+  background-position: right center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 9px 12px;
+}
+
+qqmusic:before {
+  content: "QQ音乐";
+  display: block;
+  text-align: left;
+}
+
+qqmusic:after {
+  content: "QQ音乐--预览查看";
+  color: #8d8d8d;
+  display: block;
+  text-align: left;
+}

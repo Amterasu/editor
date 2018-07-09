@@ -13,13 +13,7 @@
           </ul>
         </div>
         <div class="editor-view_contanier" :class="{gird:isGird}">
-          <!-- <div class="custom-tree-container">
-            <div class="block">
-              <p>使用 render-content</p>
-              <el-tree :data="data" default-expand-all :expand-on-click-node="false" :render-content="renderContent" draggable>
-              </el-tree>
-            </div>
-          </div> -->
+          <web-editor />
         </div>
         <ul id="v_ruler" @mousedown="createVRulerLine">
           <li v-for="i in rulerYScale" :key="i">
@@ -34,6 +28,7 @@
 <script>
 import { mapMutations, mapState } from "vuex";
 import DesignTool from "./DesignTool";
+import WebEditor from "../components/webEditor/WebEditor";
 export default {
   data() {
     return {
@@ -51,7 +46,8 @@ export default {
       lineMove: true,
       isGird: false,
       rulerXScale: [0, 100, 200, 300, 400, 500, 600],
-      rulerYScale: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+      rulerYScale: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
+
     };
   },
   methods: {
@@ -107,28 +103,6 @@ export default {
       this.delVLineIndex = this.vRulerLineArr.length;
       this.delHLineIndex = this.hRulerLineArr.length;
     },
-    renderContent(h, { node, data, store }) {
-      return (
-        <span class="custom-tree-node">
-          <span style="">
-            <el-button
-              size="mini"
-              type="text"
-              // on-click={() => this.append(data, data, store)}
-            >
-              Append
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              // on-click={() => this.remove(node, data, data, store)}
-            >
-              Delete
-            </el-button>
-          </span>
-        </span>
-      );
-    }
   },
   computed: {
     ...mapState("dataStructure", {
@@ -136,7 +110,8 @@ export default {
     })
   },
   components: {
-    DesignTool
+    DesignTool,
+    WebEditor
   }
 };
 </script>
@@ -148,7 +123,7 @@ export default {
   box-sizing: border-box;
   background: #151515;
   position: absolute;
-  left: 360px;
+  left: 440px;
   right: 270px;
   height: 100%;
   padding: 50px 0 150px 0;
@@ -238,7 +213,7 @@ export default {
       position: relative;
       background: #fff;
       box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
-      width: 640px;
+      width: 500px;
       height: 1040px;
       overflow: auto;
       margin-bottom: 150px;

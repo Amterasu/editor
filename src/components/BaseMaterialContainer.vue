@@ -1,14 +1,18 @@
 <template>
   <div class="item">
-    <div class="">
-      <section class="KolEditor">
-        <section style="display:flex;align-items:center;justify-content:center;margin:10px auto;">
-          <section style="max-width:320px !important;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/152325635ebec93aa28d082b9ce28bba10fadd.png" style="max-width:100%;margin:0px auto;"></section>
-        </section>
-      </section>
-    </div>
+    <div v-html="html" @click.stop="randerMaterial($event)"></div>
+    <!-- 收藏按钮 -->
     <i class="fa media fa-star-o"></i>
-    <img src="../images/vip.png" class="isvip">
+    <!-- 是否是vip -->
+    <img src="../images/vip.png" class="isvip" v-if="isVip">
+    <!-- 分块使用 -->
+    <div class="usepart" v-if="usePart">
+      <div class="exitPart">
+        <button @click.stop="usePart=false;">
+          <i aria-hidden="true" class="fa fa-sign-out"></i>退出分块使用</button>
+      </div>
+      <div class="partContent" v-html="partContent.Content"></div>
+    </div>
   </div>
 </template>
 
@@ -16,39 +20,219 @@
 export default {
   data() {
     return {
-      status: this.value
+      status: this.value,
+      usePart: true, // 是否使用分块
+      partContent: {
+        content: "" // 分块的内容
+      }
+      // aboutMertial: {
+      //   type: "template", //素材类型
+      //   mertialId: "",
+      //   ifall: true, //是否全部
+      //   listContent: [], //数据数组
+      //   page: 1, //页数
+      //   group: {
+      //     renderCustomList: renderCustomList(), //素材分组
+      //     value: 1, //默认的数据
+      //     groupManage: false, //分组管理
+      //     groupEdit: false, //修改分组
+      //     groupAdd: false, //添加分组
+      //     groupDelete: false, //删除分组
+      //     groupName: "", //分组名称
+      //     groupId: "" //分组名称
+      //   } //我的素材分组数据
+      // } //有关素材的数据项
     };
   },
   methods: {
-    changeSwitch() {
-      this.emitSwitch();
-    },
-    emitSwitch() {
-      this.$emit("changeSwitch", this.status);
+    //  向编辑器中构建素材
+    randerMaterial(event) {
+      if (this.type == "template" || this.type == "designTemplate") {
+        return false;
+      } else if (
+        $(".sidebar")
+          .find("li.active")
+          .attr("data-type") == "imglist" &&
+        $(this.ue.body).find(".checkSelected").length > 0 &&
+        $(this.ue.body)
+          .find(".checkSelected")
+          .children()[0].localName == "img"
+      ) {
+        $(this.ue.body)
+          .find(".checkSelected")
+          .children("img")
+          .attr(
+            "src",
+            $(event.currentTarget)
+              .find("img")
+              .attr("src")
+          );
+        $(this.ue.body)
+          .find(".checkSelected")
+          .children("img")
+          .attr(
+            "_src",
+            $(event.currentTarget)
+              .find("img")
+              .attr("src")
+          );
+        clearselectline();
+      } else {
+        if (
+          ($(event.currentTarget).find(".isvip").length > 0 &&
+            !!Number(topnavInfo.userInfo.IsVip)) ||
+          $(event.currentTarget).find(".isvip").length == 0
+        ) {
+          var range = this.ue.selection.getRange().cloneContents(); //获得选区【秒刷】
+          var _this =
+            $(event.currentTarget)[0].nodeName.toLowerCase() == "p"
+              ? $(event.currentTarget)
+                  .parents(".item")
+                  .find(".KolEditor:first")
+                  .clone()
+              : $(event.currentTarget)
+                  .find(".KolEditor:first")
+                  .clone();
+          if (this.type == "mysign") {
+            //侧边栏在我的签名上，点击为添加签名
+            //头部
+            if ($(this.ue.body).find(".materialTop").length > 0) {
+              $(this.ue.body)
+                .find(".materialTop")
+                .empty()
+                .append(
+                  $(event.currentTarget)
+                    .find(".materialTop")
+                    .html()
+                );
+            } else {
+              var _node = this.ue.body.firstChild;
+              $(event.currentTarget)
+                .find(".materialTop")
+                .clone()
+                .insertBefore($(_node));
+            }
+            // 尾部
+            if ($(this.ue.body).find(".materialBottom").length > 0) {
+              $(this.ue.body)
+                .find(".materialBottom")
+                .empty()
+                .append(
+                  $(event.currentTarget)
+                    .find(".materialBottom")
+                    .html()
+                );
+            } else {
+              $(this.ue.body).append(
+                $(event.currentTarget)
+                  .find(".materialBottom")
+                  .clone()[0]
+              );
+            }
+          } else {
+            if (range != null) {
+              secondBrush(_this, type);
+            } else {
+              var _style = $(event.currentTarget)
+                .find(".KolEditor:first")
+                .attr("style");
+              this.ue.execCommand(
+                "inserthtml",
+                '<section  class="KolEditor" style="' +
+                  _style +
+                  '">' +
+                  _this.html() +
+                  "</section>"
+              );
+              //  ====== 带序号的素材，点击实现数字自增  ======
+              if (
+                $(event.currentTarget)
+                  .find(".KolEditor:first")
+                  .find("p.count").length > 0
+              ) {
+                $(event.currentTarget)
+                  .find(".KolEditor:first")
+                  .find("p.count")
+                  .each(function() {
+                    var count = Number($(this).html());
+                    var _length = $(this).html().length;
+                    if (String(count + 1).length < _length) {
+                      var zero = new Array(
+                        _length - String(count + 1).length + 1
+                      ).join("0");
+                      $(this).html(zero + (count + 1));
+                    } else {
+                      $(this).html(count + 1);
+                    }
+                  });
+              }
+            }
+          }
+          clearselectline();
+        } else {
+          this.dialog.vipTips = true;
+          this.vipMessage = "成为VIP会员，VIP素材免费用";
+          $(".purchvip")
+            .find("button")
+            .attr({ statsmark: "查看VIP特权关闭", statstype: "2" });
+        }
+      }
     }
   },
   props: {
     type: {
       // template mertial
       type: String,
-      default: 'mertial'
+      default: "mertial"
     },
     isVip: {
       // 是否是vip
       type: Boolean,
       default: false
     },
-    full: {
-      // 容器全宽或者半宽
-      type: Boolean,
-      default: true
+    html: {
+      // html
+      type: String,
+      default: ""
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.item{
-  margin-top:10px;
+.item {
+  margin-top: 10px;
+  // 分块使用
+  .usepart {
+    width: 100%;
+    border: 1px solid #a55c15;
+    box-sizing: border-box;
+    background-color: #fff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 100;
+    .exitPart {
+      height: 48px;
+      background-color: #ebeff5;
+      color: #4c637b;
+      line-height: 48px;
+      button {
+        background-color: transparent;
+        border: none;
+        padding-left: 15px;
+        font-size: 15px;
+        i {
+          display: inline-block;
+          margin-right: 10px;
+        }
+      }
+    }
+    .partContent {
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 15px;
+    }
+  }
 }
 i.media {
   position: absolute;
@@ -86,7 +270,7 @@ i.fa-trash-o {
   left: 0px;
   top: 0px;
   z-index: 99;
-      width: 25px;
+  width: 25px;
 }
 i.fa-times {
   color: #ff4949 !important;
