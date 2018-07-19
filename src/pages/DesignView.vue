@@ -1,25 +1,11 @@
 <template>
   <div>
     <div class="editor-view">
-      <design-tool :isShowRulerLine.sync="isShowRulerLine" :lineMove.sync="lineMove" :isGird.sync="isGird" @removeRulerLine="removeRulerLine" />
-      <div id="line_top"></div>
-      <div v-show=" hRulerLine && isShowRulerLine" id="line_top" v-for="i in  hRulerLine" :key="'topline_'+i" :ref="'hRulerLine_'+i" @mousedown="changeHDragTarget(i)" style="cursor:move" v-if=" i > delHLineIndex"></div>
-      <div class="editor-view_bg" @mousemove="move" @mouseup="stopMove" :style="isDraging?'cursor:pointrer':''">
-        <div id="line_left"></div>
-        <div v-show="vRulerLine && isShowRulerLine" id="line_left" v-for="i in vRulerLine" :key="'leftline_'+i" :ref="'vRulerLine_'+i" @mousedown="changeVDragTarget(i)" style="cursor:move" v-if=" i > delVLineIndex"></div>
-        <div class="h_ruler_wraper" @mousedown="createHRulerLine" @mouseup="stopMove">
-          <ul id="h_ruler">
-            <li v-for="i in rulerXScale" :key="i">{{i}}</li>
-          </ul>
-        </div>
-        <div class="editor-view_contanier" :class="{gird:isGird}">
+      <design-tool />
+      <div class="editor-view_bg">
+        <div class="editor-view_contanier">
           <web-editor />
         </div>
-        <ul id="v_ruler" @mousedown="createVRulerLine">
-          <li v-for="i in rulerYScale" :key="i">
-            <span>{{i}}</span>
-          </li>
-        </ul>
       </div>
     </div>
   </div>
@@ -33,76 +19,19 @@ export default {
   data() {
     return {
       // 参考线
-      hRulerLine: 0,
-      hRulerLineArr: [],
-      vRulerLine: 0,
-      vRulerLineArr: [],
-      isDraging: false,
-      currDrag: "",
-      timeout: null,
-      delVLineIndex: 0,
-      delHLineIndex: 0,
       isShowRulerLine: true,
-      lineMove: true,
-      isGird: false,
-      rulerXScale: [0, 100, 200, 300, 400, 500, 600],
-      rulerYScale: [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
-
     };
   },
   methods: {
     // 参考线
-    createHRulerLine($event) {
-      if (!this.lineMove) {
-        return;
-      }
-      this.hRulerLine++;
-      this.hRulerLineArr.push("hRulerLine_" + this.hRulerLine);
-      this.currDrag = "hRulerLine_" + this.hRulerLine;
-      this.isDraging = true;
-      this.isShowRulerLine = true;
-    },
-    createVRulerLine($event) {
-      if (!this.lineMove) {
-        return;
-      }
-      this.vRulerLine++;
-      this.vRulerLineArr.push("vRulerLine_" + this.vRulerLine);
-      this.currDrag = "vRulerLine_" + this.vRulerLine;
-      this.isDraging = true;
-      this.isShowRulerLine = true;
-    },
-    move($event) {
-      if (!this.timeout && this.lineMove) {
-        let that = this;
-        this.timeout = setTimeout(function() {
-          if (!!that.currDrag) {
-            if (that.currDrag.includes("hRulerLine_")) {
-              that.$refs[that.currDrag][0].style.top =
-                $event.offsetY + 116 + "px";
-            } else {
-              that.$refs[that.currDrag][0].style.left =
-                $event.offsetX - 5 + "px";
-            }
-          }
 
-          that.timeout = null;
-        }, 10);
-      }
-    },
-    changeHDragTarget(i) {
-      this.currDrag = "hRulerLine_" + i;
-    },
-    changeVDragTarget(i) {
-      this.currDrag = "vRulerLine_" + i;
-    },
-    stopMove() {
-      this.currDrag = "";
-    },
-    removeRulerLine() {
-      this.delVLineIndex = this.vRulerLineArr.length;
-      this.delHLineIndex = this.hRulerLineArr.length;
-    },
+  },
+  created(){
+    //  页面尺寸变化
+    $(window).resize(function() {
+        // page_height = $(window).height();
+        $("#edui1_iframeholder").height(($(window).height() * 1) - 200);
+    })
   },
   computed: {
     ...mapState("dataStructure", {
@@ -127,7 +56,7 @@ export default {
   right: 270px;
   height: 100%;
   padding: 50px 0 150px 0;
-  overflow: auto;
+  overflow: hidden;
   .custom-tree-node {
     display: flex;
     justify-content: center;
@@ -137,30 +66,10 @@ export default {
   .el-tree-node__content {
     height: auto;
   }
-  #line_top {
-    width: 100%;
-    height: 0;
-    border-bottom: 2px solid #4affff;
-    // transform: scaleY(0.5);
-    position: absolute;
-    left: 0;
-    top: 120px;
-    z-index: 49;
-  }
-  #line_left {
-    width: 0;
-    height: 100%;
-    border-right: 2px solid #4affff;
-    // transform: scaleY(0.5);
-    position: absolute;
-    left: 0px;
-    top: -120px;
-    z-index: 49;
-  }
   .editor-view_bg {
     position: absolute;
     margin: 0 auto;
-    top: 120px;
+    // top: 120px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -211,7 +120,7 @@ export default {
     }
     .editor-view_contanier {
       position: relative;
-      background: #fff;
+      // background: #fff;
       box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
       width: 500px;
       height: 1040px;

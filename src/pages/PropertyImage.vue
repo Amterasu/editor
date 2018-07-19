@@ -2,7 +2,7 @@
   <div id="PropertyView" style="right: 0;" :style="foldMenuStatus?'background:#141414':''">
     <h1 id="PropertyViewHeader" class="f--hlc" style="cursor:default">
       <div class="property-header f--hlc">
-        <div class="header-name">12</div>
+        <div class="header-name">图片</div>
         <div>的属性</div>
       </div>
       <button class="btn btn-clear" title="收起" @click="foldMenu" :class='{folded:foldMenuStatus}'></button>
@@ -10,7 +10,6 @@
     <div class="" id="PropertyViewBody" style="max-height: calc(100% - 30px); overflow-y: scroll;" v-show="!foldMenuStatus">
       <div class="property-fields">
         <form class="ant-form ant-form-horizontal form_basic">
-          <am-input v-model="value1" label="ID" :count="false" />
           <am-input v-model="value1" label="资源URL" :count="false" />
         </form>
         <form class="ant-form ant-form-horizontal form_position">

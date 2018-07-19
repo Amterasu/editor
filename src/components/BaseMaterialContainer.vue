@@ -76,7 +76,7 @@ export default {
               .find("img")
               .attr("src")
           );
-        clearselectline();
+        this.clearselectline();
       } else {
         if (
           ($(event.currentTarget).find(".isvip").length > 0 &&
@@ -131,7 +131,7 @@ export default {
             }
           } else {
             if (range != null) {
-              secondBrush(_this, type);
+              this.secondBrush(_this);
             } else {
               var _style = $(event.currentTarget)
                 .find(".KolEditor:first")
@@ -168,7 +168,7 @@ export default {
               }
             }
           }
-          clearselectline();
+          this.clearselectline();
         } else {
           this.dialog.vipTips = true;
           this.vipMessage = "成为VIP会员，VIP素材免费用";
@@ -177,6 +177,50 @@ export default {
             .attr({ statsmark: "查看VIP特权关闭", statstype: "2" });
         }
       }
+    },
+        // 删除选中框
+   clearselectline() {
+        $(this.ue.body).find(".checkSelected").removeClass("checkSelected");
+        // $("menu").remove();
+        // $(".material-operation-tools").remove();
+        // $("[id*=collorpicker_]").hide();
+        // //复制插件的隐藏
+        // $("#global-zeroclipboard-html-bridge").css({
+        //     top: "-100px",
+        //     left: $(".main-tools").position().left + 10
+        // }).attr({
+        //     statsmark: "复制全文",
+        //     statstype: "3"
+        // })
+    },
+        //秒刷代码
+    secondBrush(_this) {
+        var rangeLength = this.ue.selection.getRange().endOffset;
+        var textLength = _this.find("p").length;
+        var imgLength = _this.find("img.KolImg").length;
+        var startIndex = 0;
+        var imgIndex = 0;
+        var innertext = _this.html();
+        this.ue.selection.getRange().adjustmentBoundary().traversal(function(node) {
+            var isHasImg = 0;
+            if (node.localName == "img" || $(node).find("img").length > 0) {
+                var imgsrc = node.currentSrc ? node.currentSrc : $(node).find("img").attr("src");
+                _this.find("img.KolImg").eq(imgIndex).attr("src", imgsrc);
+                isHasImg = 1;
+                imgIndex++;
+            } else {
+                if (node.localName != "br" && $.trim(node.textContent) != "") {
+                    if (startIndex >= textLength) {
+                        var beforeStyle = _this.find("p:last").attr("style");
+                        _this.find("p:last").after('<p style="' + beforeStyle + '">' + node.textContent + '</p>');
+                    } else {
+                        _this.find("p").eq(startIndex).html(node.textContent);
+                    }
+                    startIndex++;
+                }
+            }
+        })
+        this.ue.execCommand('inserthtml', '<section  class="KolEditor">' + _this.html() + '</section>');
     }
   },
   props: {

@@ -9,7 +9,7 @@
     </div>
     <div class="ant-col-r">
       <div class="ant-form-item-control" style="text-align: left;">
-          <el-switch v-model="status" active-color="#ffa800" inactive-color="#151515" style="margin-top:3px;" @change="changeSwitch" />
+        <el-switch v-model="status" active-color="#ffa800" inactive-color="#151515" style="margin-top:3px;" @change="changeSwitch" />
       </div>
     </div>
   </div>
@@ -40,11 +40,16 @@ export default {
       type: [String, Number],
       default: ""
     },
-    full:{
+    full: {
       // 容器全宽或者半宽
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.status = newVal;
+    }
   }
 };
 </script>

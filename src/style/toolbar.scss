@@ -2164,20 +2164,20 @@ body {
   background: #545454
 }
 
-#PropertyView .ant-input-number,
-#PropertyView .ant-input-number-input-wrap,
-.propertyView .ant-input-number,
-.propertyView .ant-input-number-input-wrap {
-  height: 22px !important;
-  line-height: 22px !important
-}
+// #PropertyView .ant-input-number,
+// #PropertyView .ant-input-number-input-wrap,
+// .propertyView .ant-input-number,
+// .propertyView .ant-input-number-input-wrap {
+//   height: 22px !important;
+//   line-height: 22px !important
+// }
 
-#PropertyView .ant-input-number-input-wrap input,
-.propertyView .ant-input-number-input-wrap input {
-  padding-right: 20px;
-  height: 22px !important;
-  line-height: 22px !important
-}
+// #PropertyView .ant-input-number-input-wrap input,
+// .propertyView .ant-input-number-input-wrap input {
+//   padding-right: 20px;
+//   height: 22px !important;
+//   line-height: 22px !important
+// }
 
 #PropertyView .ant-input-number-input-wrap:after,
 .propertyView .ant-input-number-input-wrap:after {
@@ -4390,7 +4390,7 @@ form .ant-select {
   vertical-align: middle;
   border: 1px solid #d9d9d9;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: inherit;
   width: 80px
 }
 
@@ -4533,7 +4533,7 @@ textarea.ant-input-number {
 }
 
 .ant-input-number-input-wrap {
-  overflow: hidden;
+  // overflow: hidden;
   height: 28px
 }
 
@@ -4599,11 +4599,11 @@ textarea.ant-input-number {
 
 .ant-input-number-sm .ant-input-number-handler-wrap,
 .ant-input-number-sm .ant-input-number-input-wrap {
-  height: 22px
+  height: 20px
 }
 
 .ant-input-number-sm .ant-input-number-handler {
-  height: 11px
+  height: 9px
 }
 
 .ant-input-number-sm input {

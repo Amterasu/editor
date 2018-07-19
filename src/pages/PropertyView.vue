@@ -1,20 +1,22 @@
 <template>
   <div>
-    <property-image v-show="currType == 1" />
-    <property-text v-show="currType == 2" />
+    <property-image v-show="toolBarType == 'img'" :cssRulers='cssRulerData' />
+    <property-text v-show="toolBarType == 'text'" :cssRulers='cssRulerData' />
   </div>
 </template>
 
 <script>
 import PropertyImage from "./PropertyImage";
 import PropertyText from "./PropertyText";
+import { mapMutations, mapState } from "vuex";
+
 export default {
   data() {
     return {
       open: true,
       imgScale: 20,
       activeNames: ["1"],
-      currType: 1,
+      cssRulerData:{},
       font: {
         fontSize: 12,
         color: "#3fbad9",
@@ -31,6 +33,15 @@ export default {
   components: {
     PropertyImage,
     PropertyText
+  },
+  computed:{
+    ...mapState("toolBarData", ["toolBarType", "cssRulers"])
+  },
+  watch:{
+    cssRulers(newVal){
+      // this.cssRulerData = newVal
+      this.cssRulerData = Object.assign({}, this.cssRulerData, newVal)
+    }
   }
 };
 </script>

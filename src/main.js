@@ -13,6 +13,7 @@ import './style/common.scss'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import $ from 'jquery'
+import './assets/js/common.js'
 
 Vue.use(MuseUI)
 Vue.use(ElementUI);

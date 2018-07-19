@@ -11,7 +11,7 @@
       <div class="ant-form-item-control">
         <div>
           <span class="ant-input-wrapper" style="float:left">
-            <el-color-picker v-model="currColor" size="mini" :disabled="!switchStatus" @change="emitColor" />
+            <el-color-picker v-model="currColor" size="mini" :disabled="!switchStatus" @change="emitColor" show-alpha />
           </span>
           <el-switch v-model="switchStatus" active-color="#ffa800" inactive-color="#151515" style="margin-top:3px;" @change="changeSwitch" />
         </div>
@@ -50,6 +50,14 @@ export default {
     label: {
       type: [String, Number],
       default: ""
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.currColor = newVal;
+    },
+    switch(newVal) {
+      this.switchStatus = newVal;
     }
   }
 };

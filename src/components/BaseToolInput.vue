@@ -36,24 +36,24 @@
 export default {
   data() {
     return {
-      currentValue: this.value,
+      currentValue: this.value
     };
   },
   props: {
-    full:{
+    full: {
       // 容器全宽或者半宽
       type: Boolean,
-      default: true,
+      default: true
     },
-    count:{
+    count: {
       // 是否有计数功能
       type: Boolean,
       default: true
     },
-    icon:{
+    icon: {
       // 单位图标 rate:% px:px degree:度
       type: String,
-      default: "",
+      default: ""
     },
     step: {
       // 点击一次数值增长或者减少的数值
@@ -83,7 +83,7 @@ export default {
     label: {
       // 文字
       type: [String, Number],
-      default: ''
+      default: ""
     }
   },
   methods: {
@@ -154,9 +154,14 @@ export default {
       const { value, step, getPrecision } = this;
       return Math.max(getPrecision(value), getPrecision(step));
     },
-    fullInput(){
+    fullInput() {
       // input全宽或者半宽
-      return !this.showSlider && this.full
+      return !this.showSlider && this.full;
+    }
+  },
+  watch: {
+    value(newVal) {
+      this.currentValue = newVal;
     }
   }
 };
@@ -165,5 +170,4 @@ export default {
 <style  lang="scss">
 @import "../style/toolbar";
 @import "../style/toolbarfont";
-
 </style>

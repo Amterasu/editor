@@ -1,2 +1,2 @@
-export const APPEND_VNODES = 'APPEND_VNODES'
+export const SET_TOOL_BAR = 'SET_TOOL_BAR'
 export const REMOVE_VNODES = 'REMOVE_VNODES'

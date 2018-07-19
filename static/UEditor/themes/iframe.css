@@ -1,4 +1,3 @@
-/*可以在这里添加你自己的css*/
 html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -23,7 +22,7 @@ body {
   padding: 15px !important;
   font-size: 16px;
   overflow-x: hidden;
-  font-family: "微软雅黑", "Microsoft YaHei", Arial, sans-serif;
+  font-family: "å¾®è½¯é›…é»‘", "Microsoft YaHei", Arial, sans-serif;
   background-color: #FFF;
   line-height: inherit
 }
@@ -46,7 +45,7 @@ body {
 }
 
 
-/* 当前被选中的标签标识 */
+/* å½“å‰è¢«é€‰ä¸­çš„æ ‡ç­¾æ ‡è¯† */
 
 .checkSelected {
   outline: 1px dashed #ff8c00;
@@ -54,7 +53,7 @@ body {
 }
 
 
-/* 操作中标识 */
+/* æ“ä½œä¸­æ ‡è¯† */
 
 .executeIng {
   position: relative;
@@ -70,7 +69,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  content: "处理中...";
+  content: "å¤„ç†ä¸­...";
 }
 
 .checkSelected img {
@@ -337,7 +336,7 @@ h5{font-size:14px;line-height:18px;}
 h6{font-size:12px;line-height:14px;}*/
 
 
-/** 微信音乐，微信音频的样式 **/
+/** å¾®ä¿¡éŸ³ä¹ï¼Œå¾®ä¿¡éŸ³é¢‘çš„æ ·å¼ **/
 
 .db {
   display: block;
@@ -357,13 +356,13 @@ qqmusic {
 }
 
 qqmusic:before {
-  content: "QQ音乐";
+  content: "QQéŸ³ä¹";
   display: block;
   text-align: left;
 }
 
 qqmusic:after {
-  content: "QQ音乐--预览查看";
+  content: "QQéŸ³ä¹--é¢„è§ˆæŸ¥çœ‹";
   color: #8d8d8d;
   display: block;
   text-align: left;
