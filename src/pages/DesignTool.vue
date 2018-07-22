@@ -5,39 +5,40 @@
       <span class="name">工具集</span>
     </div>
     <div class="bd list" v-show="toolShow">
-      <el-tooltip class="item" effect="dark" content="清除参考线" placement="right">
-        <p @click="removeRulerLine">
-          <i class="iconfont icon-qingchu"></i>清除参考线
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="隐藏参考线" placement="right">
-        <p @click="hideRulerLine">
-          <i class="iconfont icon-yincang"></i>隐藏参考线
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="显示参考线" placement="right">
-        <p @click="showRulerLine">
-          <i class="iconfont icon-xianshikejian"></i>显示参考线
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="锁定后不能新增或者操作参考线" placement="right">
+      <el-tooltip class="item" effect="dark" content="清空内容" placement="right">
         <p @click="lockRulerLine">
-          <i class="iconfont icon-suoding"></i>锁定参考线
+          <i class="iconfont icon-suoding"></i>清空内容
         </p>
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="解锁参考线" placement="right">
+      <el-tooltip class="item" effect="dark" content="文章预览" placement="right">
+        <p @click="removeRulerLine">
+          <i class="iconfont icon-qingchu"></i>文章预览
+        </p>
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="保存草稿" placement="right">
+        <p @click="hideRulerLine">
+          <i class="iconfont icon-yincang"></i>保存草稿
+        </p>
+      </el-tooltip>
+      <el-tooltip class="item" effect="dark" content="复制全文" placement="right">
+        <p @click="showRulerLine">
+          <i class="iconfont icon-xianshikejian"></i>复制全文
+        </p>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" content="上传图片" placement="right">
         <p @click="unlockRulerLine">
-          <i class="iconfont icon-jiesuo"></i>解锁参考线
+          <i class="iconfont icon-jiesuo"></i>上传图片
         </p>
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="清除参考线" placement="right">
+      <el-tooltip class="item" effect="dark" content="导入文章" placement="right">
         <p @click="showGird">
-          <i class="iconfont icon-wangge"></i>显示网格
+          <i class="iconfont icon-wangge"></i>导入文章
         </p>
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="清除参考线" placement="right">
+      <el-tooltip class="item" effect="dark" content="保存模板" placement="right">
         <p @click="hideGird">
-          <i class="iconfont icon-Eliminate"></i>清除网格
+          <i class="iconfont icon-Eliminate"></i>保存模板
         </p>
       </el-tooltip>
     </div>
@@ -72,8 +73,8 @@ export default {
     hideGird() {
       this.$emit("update:isGird", false);
     },
-    removeRulerLine(){
-      this.$emit('removeRulerLine')
+    removeRulerLine() {
+      this.$emit("removeRulerLine");
     }
   }
 };

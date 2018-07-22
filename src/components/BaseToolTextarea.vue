@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     changeTextarea() {
-      this.emitTextarea();
+      this.setCurrentValue();
     },
     setCurrentValue() {
       this.$emit("changeTextarea", this.value);

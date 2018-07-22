@@ -31,15 +31,16 @@ export default {
     editorClikEvent() {
       const self = this;
       $(this.ue.body).delegate(".KolEditor", "click", function(event) {
-        event = event || window.event;
-        const target = event.target || event.srcElement;
+        // event = event || window.event;
+        // const target = event.target || event.srcElement;
+        Vue.prototype.$material = $(this);
         // 阻止百度编辑器默认事件
         if (event.stopPropagation) {
           event.stopPropagation();
         } else {
           event.cancelBubble = true;
         }
-        self.toolBarInit(target);
+        self.toolBarInit(this);
       });
     },
     toolBarInit(target) {
@@ -111,46 +112,52 @@ export default {
         ? eventSelection.style.filter.split(" ")
         : [];
       const text = eventSelection.innerHTML;
-      const fontSize = Number(common.getCurryStyle(eventSelection).fontSize);
+      const fontSize = parseFloat(
+        common.getCurryStyle(eventSelection).fontSize
+      );
       const color = common.getCurryStyle(eventSelection).color;
-      const backgroundColor = common.getCurryStyle(eventSelection)
-        .backgroundColor;
+      const backgroundColor =
+        common.getCurryStyle(eventSelection).backgroundColor ==
+        "rgba(0, 0, 0, 0)"
+          ? "#fff"
+          : common.getCurryStyle(eventSelection).backgroundColor;
       const textAlign = common.getCurryStyle(eventSelection).textAlign;
       const fontStyle = common.getCurryStyle(eventSelection).fontStyle;
       const fontWeight = common.getCurryStyle(eventSelection).fontWeight;
-      const opacity = common.getCurryStyle(eventSelection).opacity;
+      const opacity =
+        Number(common.getCurryStyle(eventSelection).opacity) * 100;
       // transform
       let translateX = 0;
       let translateY = 0;
       let rotate = 0;
-      let scaleX = 0;
-      let scaleY = 0;
+      let scale = 1;
+      // let scaleY = 0;
       let skewX = 0;
       let skewY = 0;
       // filter
       let grayscale = 0;
       let sepia = 0;
-      let saturate = 1;
+      let saturate = 100;
       let hueRotate = 0;
       let invert = 0;
-      let brightness = 1;
-      let contrast = 1;
+      let brightness = 100;
+      let contrast = 100;
       let blur = 0;
       if (transforms.length > 0) {
         transforms.forEach(element => {
-          let value = Number(element.match(/\((.+?)\)/g)[0]);
+          let value = parseFloat(element.split("(")[1]);
           if (element.includes("translateX")) translateX = value;
           if (element.includes("translateY")) translateY = value;
           if (element.includes("rotate")) rotate = value;
-          if (element.includes("scaleX")) scaleX = value;
-          if (element.includes("scaleY")) scaleY = value;
+          if (element.includes("scale")) scale = value;
+          // // if (element.includes("scaleY")) scaleY = value;
           if (element.includes("skewX")) skewX = value;
           if (element.includes("skewY")) skewY = value;
         });
       }
       if (filters.length > 0) {
         filters.forEach(element => {
-          let value = Number(element.match(/\((.+?)\)/g)[0]);
+          let value = parseFloat(element.split("(")[1]);
           if (element.includes("grayscale")) grayscale = value;
           if (element.includes("sepia")) sepia = value;
           if (element.includes("saturate")) saturate = value;
@@ -166,7 +173,13 @@ export default {
               .parents("span:first")
               .css("text-decoration")
           : common.getCurryStyle(eventSelection).textDecoration;
+      // const lineHeight = common.getCurryStyle(eventSelection).lineHeight;
+      const letterSpacing =
+        common.getCurryStyle(eventSelection).letterSpacing == "normal"
+          ? 0
+          : common.getCurryStyle(eventSelection).letterSpacing;
       const lineHeight = common.getCurryStyle(eventSelection).lineHeight;
+
       this.attributes = {
         text,
         fontSize,
@@ -181,8 +194,8 @@ export default {
         translateX,
         translateY,
         rotate,
-        scaleX,
-        scaleY,
+        scale,
+        // scaleY,
         skewX,
         skewY,
         grayscale,
@@ -191,7 +204,8 @@ export default {
         hueRotate,
         invert,
         brightness,
-        blur
+        blur,
+        letterSpacing
       };
     }
   },

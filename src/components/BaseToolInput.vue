@@ -20,7 +20,7 @@
               </a>
             </div>
             <div class="ant-input-number-input-wrap">
-              <input class="ant-input-number-input" :step="step" :max="max" :min="min" :value="currentValue" @keydown.up="increase" @keydown.down="decrease" ref="input">
+              <input class="ant-input-number-input" :step="step" :max="max" :min="min" :value="currentValue" @keydown.up="increase($event)" @keydown.down="decrease($event)" ref="input" @input="inputEventChangeVal($event)">
             </div>
           </div>
           <div class="ant-slider slider-per" v-if="showSlider">
@@ -36,7 +36,7 @@
 export default {
   data() {
     return {
-      currentValue: this.value
+      currentValue: parseFloat(this.value)
     };
   },
   props: {
@@ -62,12 +62,12 @@ export default {
     },
     max: {
       // 最大
-      type: Number,
-      default: 100
+      type: [Number,String],
+      default: 9999
     },
     min: {
       // 最小
-      type: Number,
+      type: [Number,String],
       default: 0
     },
     value: {
@@ -87,17 +87,19 @@ export default {
     }
   },
   methods: {
-    increase() {
+    increase(e) {
       if (!this.count || this.maxDisabled) return;
       const value = this.value || 0;
       const newVal = this._increase(value, this.step);
       this.setCurrentValue(newVal);
+      e.currentTarget.focus()
     },
-    decrease() {
+    decrease(e) {
       if (!this.count || this.minDisabled) return;
       const value = this.value || 0;
       const newVal = this._decrease(value, this.step);
       this.setCurrentValue(newVal);
+      e.currentTarget.focus()
     },
 
     _increase(val, step) {
@@ -128,15 +130,21 @@ export default {
     },
     setCurrentValue(newVal) {
       const oldVal = this.currentValue;
-      if (newVal >= this.max) newVal = this.max;
-      if (newVal <= this.min) newVal = this.min;
+      if (newVal >= this.max) newVal = parseFloat(this.max);
+      if (newVal <= this.min) newVal = parseFloat(this.min);
       // if (oldVal === newVal) {
       //   this.$refs.input.setCurrentValue(this.currentValue);
       //   return;
       // }
       this.$emit("input", newVal);
       this.$emit("change", newVal, oldVal);
-      this.currentValue = newVal;
+      this.currentValue = parseFloat(newVal);
+
+    },
+    inputEventChangeVal(e){
+      const newVal = parseFloat(e.currentTarget.value)
+      this.setCurrentValue(newVal);
+      e.currentTarget.focus()
     },
     toPrecision(num, precision) {
       if (precision === undefined) precision = this.precision;
@@ -161,7 +169,7 @@ export default {
   },
   watch: {
     value(newVal) {
-      this.currentValue = newVal;
+      this.currentValue = parseFloat(newVal);
     }
   }
 };
