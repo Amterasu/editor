@@ -1,81 +1,103 @@
 <template>
-  <div id="tools" class="box jq_dd_div window ui-draggable window_act">
-    <div class="hd">
-      <i class="iconFold" title="缩小还原" @click="toolShow = !toolShow" :class="{folded:!toolShow}"></i>
-      <span class="name">工具集</span>
-    </div>
-    <div class="bd list" v-show="toolShow">
-      <el-tooltip class="item" effect="dark" content="清空内容" placement="right">
-        <p @click="lockRulerLine">
-          <i class="iconfont icon-suoding"></i>清空内容
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="文章预览" placement="right">
-        <p @click="removeRulerLine">
-          <i class="iconfont icon-qingchu"></i>文章预览
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="保存草稿" placement="right">
-        <p @click="hideRulerLine">
-          <i class="iconfont icon-yincang"></i>保存草稿
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="复制全文" placement="right">
-        <p @click="showRulerLine">
-          <i class="iconfont icon-xianshikejian"></i>复制全文
-        </p>
-      </el-tooltip>
+  <div>
+    <div id="tools" class="box jq_dd_div window ui-draggable window_act">
+      <div class="hd">
+        <i class="iconFold" title="缩小还原" @click="toolShow = !toolShow" :class="{folded:!toolShow}"></i>
+        <span class="name">工具集</span>
+      </div>
+      <div class="bd list" v-show="toolShow">
+        <el-tooltip class="item" effect="dark" content="清空内容" placement="right">
+          <p @click="showClearConfirm = true">
+            <i class="iconfont icon-suoding"></i>清空内容
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="复制全文" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-xianshikejian"></i>复制全文
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="文章预览" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-qingchu"></i>文章预览
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="保存草稿" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-yincang"></i>保存草稿
+          </p>
+        </el-tooltip>
 
-      <el-tooltip class="item" effect="dark" content="上传图片" placement="right">
-        <p @click="unlockRulerLine">
-          <i class="iconfont icon-jiesuo"></i>上传图片
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="导入文章" placement="right">
-        <p @click="showGird">
-          <i class="iconfont icon-wangge"></i>导入文章
-        </p>
-      </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="保存模板" placement="right">
-        <p @click="hideGird">
-          <i class="iconfont icon-Eliminate"></i>保存模板
-        </p>
-      </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="上传图片" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-jiesuo"></i>上传图片
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="导入文章" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-wangge"></i>导入文章
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="保存模板" placement="right">
+          <p @click="copyAllArea">
+            <i class="iconfont icon-Eliminate"></i>保存模板
+          </p>
+        </el-tooltip>
+      </div>
     </div>
+    <am-confirm :show.sync="showClearConfirm" v-model="ClearConfirmText" @ensure="clearAllArea" type="warning" />
+    <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
   </div>
+
 </template>
 
 <script>
+import amConfirm from "../components/BaseConfirm";
+import amAlert from "../components/BaseAlert";
+
 export default {
   data() {
     return {
       // 工具箱
-      toolShow: true
+      toolShow: true,
+      showClearConfirm: false,
+      ClearConfirmText: "确认清空内容吗",
+      showAlert: false,
+      alertText: ""
     };
   },
   methods: {
-    hideRulerLine() {
-      this.$emit("update:isShowRulerLine", false);
+    hideAlert() {},
+    clearAllArea() {
+      this.ue.setContent("<p></p>");
     },
-    showRulerLine() {
-      this.$emit("update:isShowRulerLine", true);
-    },
-    unlockRulerLine() {
-      this.$emit("update:lineMove", true);
-    },
-    lockRulerLine() {
-      this.$emit("update:lineMove", false);
-    },
-
-    showGird() {
-      this.$emit("update:isGird", true);
-    },
-    hideGird() {
-      this.$emit("update:isGird", false);
-    },
-    removeRulerLine() {
-      this.$emit("removeRulerLine");
+    copyAllArea() {
+      const self = this;
+      this.ue.selection
+        .getRange()
+        .selectNode(this.$material.get(0))
+        .select();
+      ZeroClipboard.config({
+        swfPath: "../../static/lib/zeroclipboard/dist/ZeroClipboard.swf",
+        zIndex: 101
+      });
+      var client = new ZeroClipboard(document.getElementById("copyPart"));
+      client.on("copy", function(event) {
+        var pNode = $(this.ue.selection.document);
+        var html = $.partwechat._init(this.ue, pNode, false);
+        event.clipboardData.setData("text/html", html);
+        self.showAlert = true;
+        self.alertText = "复制成功";
+      });
+      client.on("error", function(event) {
+        self.alertText =
+          "复制出错！请检查是否安装flash或者选中后在编辑区用ctrl+c试试吧！";
+        self.showAlert = true;
+      });
     }
+  },
+  components: {
+    amConfirm,
+    amAlert
   }
 };
 </script>

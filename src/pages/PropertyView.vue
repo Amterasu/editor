@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="$material">
     <property-image v-show="toolBarType == 'img'" :cssRulers='cssRulerData' />
     <property-text v-show="toolBarType == 'text'" :cssRulers='cssRulerData' />
   </div>

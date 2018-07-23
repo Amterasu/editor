@@ -1,5 +1,5 @@
 <template>
-  <div id="PropertyView" style="right: 0;" :style="foldMenuStatus?'background:#efefef':''">
+  <div id="PropertyView" style="right: 0;">
     <h1 id="PropertyViewHeader" class="f--hlc" style="cursor:default">
       <div class="property-header f--hlc">
         <div class="header-name">文本</div>
@@ -107,7 +107,7 @@
           <am-input @change='changeSaturate' v-model="cssRulersData.saturate" label="饱和度" icon='rate' showSlider min=0 max=100 />
           <am-input @change='changeSepia' v-model="cssRulersData.sepia" label="褐色化" icon='rate' showSlider min=0 max=100 />
           <am-input @change='changeHueRoutate' v-model="cssRulersData.hueRotate" label="色相旋转" icon='degree' max=360 showSlider min=0 />
-          <am-switch-input v-model="change1" label="图片可换" />
+          <!-- <am-switch-input v-model="change1" label="图片可换" /> -->
         </form>
         <form class="ant-form ant-form-horizontal form_display2" style="padding-bottom:20px;">
 
@@ -127,7 +127,7 @@
             <span>选中</span>
             <span> </span>
           </button>
-          <button type="button" class="ant-btn ant-btn-primary" style="margin-bottom:10px;" @click="copyArea">
+          <button type="button" class="ant-btn ant-btn-primary" style="margin-bottom:10px;" @click="copyArea" id="copyPart">
             <span>复制</span>
             <span> </span>
           </button>
@@ -139,6 +139,7 @@
 
       </div>
     </div>
+    <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
   </div>
 </template>
 
@@ -147,22 +148,23 @@ import amInput from "../components/BaseToolInput";
 import amColorPicker from "../components/BaseColorPicker";
 import amSwitchInput from "../components/BaseSwitchInput";
 import amToolTextarea from "../components/BaseToolTextarea";
+import amAlert from "../components/BaseAlert";
+import amConfirm from "../components/BaseConfirm";
 
 export default {
   data() {
     return {
       foldMenuStatus: false,
-      value1: 20,
-      value2: true,
-      color4: "#fff",
-      change1: true,
       cssRulersData: {},
       textCur: "left",
       desCur: "normal",
       styleCur: "normal",
       weightCur: "normal",
       colorSwitch: true,
-      bgSwitch: true
+      bgSwitch: true,
+      showAlert: false,
+      alertText: "",
+
     };
   },
   props: {
@@ -350,7 +352,7 @@ export default {
           100}) brightness(${this.cssRulersData.brightness / 100}) invert(${this
           .cssRulersData.invert / 100}) saturate(${this.cssRulersData.saturate /
           100}) sepia(${this.cssRulersData.sepia / 100}) hue-rotate(${this
-          .cssRulersData.hueRotate / 100})`
+          .cssRulersData.hueRotate}deg)`
       });
     },
     beforeRow() {
@@ -390,17 +392,41 @@ export default {
         .deleteContents();
     },
     copyArea() {
+      const self = this;
       this.ue.selection
         .getRange()
         .selectNode(this.$material.get(0))
         .select();
-    }
+      ZeroClipboard.config({
+        swfPath: "../../static/lib/zeroclipboard/dist/ZeroClipboard.swf",
+        zIndex: 101
+      });
+      var client = new ZeroClipboard(document.getElementById("copyPart"));
+      client.on("copy", function(event) {
+        var pNode = $(this.ue.selection.document);
+        var html = $.partwechat._init(this.ue, pNode, false);
+        event.clipboardData.setData("text/html", html);
+        self.showAlert = true;
+        self.alertText = "复制成功";
+      });
+      client.on("error", function(event) {
+        self.alertText =
+          "复制出错！请检查是否安装flash或者选中后在编辑区用ctrl+c试试吧！";
+        self.showAlert = true;
+      });
+    },
+    hideAlert() {
+      // ....
+    },
+
   },
   components: {
     amInput,
     amColorPicker,
     amSwitchInput,
-    amToolTextarea
+    amToolTextarea,
+    amAlert,
+    amConfirm
   }
 };
 </script>

@@ -18,7 +18,7 @@ import './assets/js/common.js'
 Vue.use(MuseUI)
 Vue.use(ElementUI);
 Vue.config.productionTip = false
-
+Vue.prototype.$material=null
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

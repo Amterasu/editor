@@ -21,27 +21,10 @@ export default {
   data() {
     return {
       status: this.value,
-      usePart: true, // 是否使用分块
+      usePart: false, // 是否使用分块
       partContent: {
         content: "" // 分块的内容
       }
-      // aboutMertial: {
-      //   type: "template", //素材类型
-      //   mertialId: "",
-      //   ifall: true, //是否全部
-      //   listContent: [], //数据数组
-      //   page: 1, //页数
-      //   group: {
-      //     renderCustomList: renderCustomList(), //素材分组
-      //     value: 1, //默认的数据
-      //     groupManage: false, //分组管理
-      //     groupEdit: false, //修改分组
-      //     groupAdd: false, //添加分组
-      //     groupDelete: false, //删除分组
-      //     groupName: "", //分组名称
-      //     groupId: "" //分组名称
-      //   } //我的素材分组数据
-      // } //有关素材的数据项
     };
   },
   methods: {
@@ -181,17 +164,6 @@ export default {
         // 删除选中框
    clearselectline() {
         $(this.ue.body).find(".checkSelected").removeClass("checkSelected");
-        // $("menu").remove();
-        // $(".material-operation-tools").remove();
-        // $("[id*=collorpicker_]").hide();
-        // //复制插件的隐藏
-        // $("#global-zeroclipboard-html-bridge").css({
-        //     top: "-100px",
-        //     left: $(".main-tools").position().left + 10
-        // }).attr({
-        //     statsmark: "复制全文",
-        //     statstype: "3"
-        // })
     },
         //秒刷代码
     secondBrush(_this) {

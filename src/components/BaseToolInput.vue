@@ -24,7 +24,7 @@
             </div>
           </div>
           <div class="ant-slider slider-per" v-if="showSlider">
-            <el-slider v-model="currentValue"></el-slider>
+            <el-slider v-model="currentValue" @change="setCurrentValue"></el-slider>
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@ export default {
     toPrecision(num, precision) {
       if (precision === undefined) precision = this.precision;
       return parseFloat(parseFloat(Number(num).toFixed(precision)));
-    }
+    },
   },
   computed: {
     minDisabled() {

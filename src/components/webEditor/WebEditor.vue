@@ -6,15 +6,16 @@
 import VueUeditorWrap from "vue-ueditor-wrap";
 import UEDITOR_CONFIG from "./editorConfig";
 import Vue from "vue";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import common from "./editorCommon";
 export default {
   data() {
     return {
       UEDITOR_CONFIG: this.UEDITOR_CONFIG,
       material_nodes: [], // 素材的所有节点
-      material: null, // 目标素材
+      material: null, // 目标素材的最高级容器 就是单个素材的区域
       attributes: {}, // 点击元素的所有支持修改的属性
+      selectStyleTarget: null, // 设置成选中区域的目标。 如果是图片则图片设置选中，否则根节点设置选中，获取属性时也会用这个
       msg:
         '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue2.x + UEditor + v-model双向绑定</h2>'
     };
@@ -31,9 +32,10 @@ export default {
     editorClikEvent() {
       const self = this;
       $(this.ue.body).delegate(".KolEditor", "click", function(event) {
-        // event = event || window.event;
-        // const target = event.target || event.srcElement;
+        event = event || window.event;
+        const target = event.target || event.srcElement;
         Vue.prototype.$material = $(this);
+        Vue.prototype.$currTarget = target;
         // 阻止百度编辑器默认事件
         if (event.stopPropagation) {
           event.stopPropagation();
@@ -45,21 +47,24 @@ export default {
     },
     toolBarInit(target) {
       this.material = $(target);
-      // 设置选区
-      this.setSelected4editor(target);
       // 查找当前节点所有子节点
       this.computedMaterial_nodes();
-      // 获取点击元素的属性
-      this.getToolBarData();
+
       // 判断点击素材的类型
       this.setClickType();
+
+      // 获取点击元素的属性
+      // this.getToolBarData();
+
+      // 设置选区
+      this.setSelected4editor(target);
     },
-    setSelected4editor(target) {
+    setSelected4editor() {
       // 只把自己的状态设置为选中
       $(this.ue.body)
         .find(".checkSelected")
         .removeClass("checkSelected");
-      $(target).addClass("checkSelected");
+      $(this.selectStyleTarget).addClass("checkSelected");
     },
     computedMaterial_nodes() {
       let self = this;
@@ -80,19 +85,25 @@ export default {
     },
     setClickType() {
       // 判断点击素材的类型
-      if (this.material.get(0).tagName.toLowerCase() === "img") {
+      if (this.$currTarget.tagName.toLowerCase() === "img") {
+        this.selectStyleTarget = this.$currTarget;
         // 只包含图片
+        // 获取点击元素的属性
+        this.getToolBarData('img');
         this.SET_TOOL_BAR({
           toolBarType: "img",
           cssRulers: this.attributes
         });
       } else {
         // 包含文字
+        // 获取点击元素的属性
+        this.getToolBarData('text');
         for (var i = 0; i < this.material_nodes.length; i++) {
           var nodeType = this.material_nodes[i].childNodes[0]
             ? this.material_nodes[i].childNodes[0].nodeType
             : -1;
           if (nodeType == 3) {
+            this.selectStyleTarget = this.$material;
             // 如果有文本节点, 则跳出循环, 加载文字工具条
             this.SET_TOOL_BAR({
               toolBarType: "text",
@@ -103,8 +114,11 @@ export default {
         }
       }
     },
-    getToolBarData() {
-      const eventSelection = this.ue.selection.getStart();
+    getToolBarData(type) {
+      const eventSelection =
+        type == "text"
+          ? this.ue.selection.getStart()
+          : this.selectStyleTarget;
       const transforms = !!eventSelection.style.transform
         ? eventSelection.style.transform.split(" ")
         : [];
@@ -137,11 +151,11 @@ export default {
       // filter
       let grayscale = 0;
       let sepia = 0;
-      let saturate = 100;
+      let saturate = 1;
       let hueRotate = 0;
       let invert = 0;
-      let brightness = 100;
-      let contrast = 100;
+      let brightness = 1;
+      let contrast = 1;
       let blur = 0;
       if (transforms.length > 0) {
         transforms.forEach(element => {
@@ -212,6 +226,9 @@ export default {
   components: {
     VueUeditorWrap
   },
-  props: {}
+  props: {},
+  computed: {
+    ...mapState("toolBarData", ["toolBarType"])
+  }
 };
 </script>
