@@ -5,7 +5,7 @@
         <div class="header-name">文本</div>
         <div>的属性</div>
       </div>
-      <button class="btn btn-clear" title="收起" @click="foldMenu" :class='{folded:foldMenuStatus}'></button>
+      <button class="btn btn-clear" title="收起" @click="foldMenu" :class='{folded:foldMenuStatus}' ></button>
     </h1>
     <div class="" id="PropertyViewBody" style="max-height: calc(100% - 30px); overflow-y: scroll;" v-show="!foldMenuStatus">
       <div class="property-fields">

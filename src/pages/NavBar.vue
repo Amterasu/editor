@@ -1,32 +1,43 @@
 <template>
-<!-- 上导航 -->
-  <div class="navbar">
-    <div class="nbContent">
-      <div class="designer-view-mid">
-        <button class="btn preview-btn" title="预览">
-          <span class="icon"></span>
-          <span class="title">预览</span>
-        </button>
-        <button class="btn qrCode-btn" title="二维码">
-          <span class="icon"></span>
-          <span class="title">二维码</span>
-        </button>
-        <button class="btn release-btn" title="发布">
-          <span class="icon"></span>
-          <span class="title">发布</span>
-        </button>
+  <!-- 上导航 -->
+  <div id="navbar">
+    <div class="navbar">
+      <div class="nbContent">
+        <div class="designer-view-mid">
+          <button class="btn preview-btn" title="预览">
+            <span class="icon"></span>
+            <span class="title">预览</span>
+          </button>
+          <button class="btn qrCode-btn" title="二维码">
+            <span class="icon"></span>
+            <span class="title">二维码</span>
+          </button>
+          <button class="btn release-btn" title="发布" @click="loginShow">
+            <span class="icon"></span>
+            <span class="title">发布</span>
+          </button>
+        </div>
       </div>
     </div>
+    <login-dialog :show.sync="showLoginDialog" />
   </div>
+
 </template>
 
 <script>
+import LoginDialog from "../components/LoginDialog";
 export default {
   data() {
-    return {};
+    return {
+      showLoginDialog: false
+    };
   },
-  methods: {},
-  components: {}
+  methods: {
+    loginShow() {
+      this.showLoginDialog = true;
+    }
+  },
+  components: { LoginDialog }
 };
 </script>
 <style lang="scss" scoped>
@@ -66,7 +77,7 @@ export default {
         color: #fff;
         text-align: left;
         cursor: pointer;
-        &:hover{
+        &:hover {
           background: #282828;
           color: #ddd;
         }
@@ -89,8 +100,7 @@ export default {
           background-position: -560px 0;
         }
         .icon {
-          background: url(../images/icon1.svg)
-            no-repeat;
+          background: url(../images/icon1.svg) no-repeat;
           float: left;
           display: block;
         }
