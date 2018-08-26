@@ -1,36 +1,57 @@
 <template>
   <div class="item">
-    <div v-html="html" @click.stop="randerMaterial($event)"></div>
-    <!-- 收藏按钮 -->
-    <i class="fa media fa-star-o"></i>
-    <!-- 是否是vip -->
-    <img src="../images/vip.png" class="isvip" v-if="isVip">
-    <!-- 分块使用 -->
-    <div class="usepart" v-if="usePart">
-      <div class="exitPart">
-        <button @click.stop="usePart=false;">
-          <i aria-hidden="true" class="fa fa-sign-out"></i>退出分块使用</button>
-      </div>
-      <div class="partContent" v-html="partContent.Content"></div>
+    <!-- 如果是模板则显示封面 -->
+    <div v-if="isTemplate && fold==true" @mouseenter="templateMaskShow = true">
+      <img :src="datas.Cover" class="templateCover">
     </div>
+    <!-- 如果点击分块使用则拆解显示 -->
+    <div v-else v-html="html" @click.stop="renderMaterial($event)" :class="{partContent:isTemplate && fold==false}"></div>
+    <!-- 收藏按钮 -->
+    <i class="fa media " :class="{'fa-star':IsCollect,'fa-star-o':!IsCollect}" v-show="isTemplate && fold==true" @click="collectItem"></i>
+    <!-- 退出分块 -->
+    <i aria-hidden="true" class="fa fa-sign-out media" v-show="isTemplate && fold==false" @click="quitUsePart"></i>
+    <!-- 是否是vip -->
+    <div class="iconfont icon-VIP" v-if="IsVip"></div>
+    <!-- 显示分块使用和整套使用 -->
+    <div class="templateSelect" v-if="isTemplate && fold==true && templateMaskShow" @mouseleave="templateMaskShow = false">
+      <p>
+        <button type="button" class="el-button el-tooltip el-button--default" @click="showTemplateAllSection">
+          <span>
+            <i  class="iconfont icon-quanbufenlei"></i>
+            <span>分块使用模板</span>
+          </span>
+        </button>
+        <button type="button" class="el-button el-tooltip el-button--default" @click="useAll">
+          <span>
+            <i  aria-hidden="true" class="iconfont icon-quanbu"></i>
+            <span>整套使用模板</span>
+          </span>
+        </button>
+      </p>
+    </div>
+    <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
   </div>
 </template>
-
+ 
 <script>
+import amAlert from "../components/BaseAlert";
+
 export default {
   data() {
     return {
-      status: this.value,
-      usePart: false, // 是否使用分块
-      partContent: {
-        content: "" // 分块的内容
-      }
+      fold: true, // 是否折叠
+      templateMaskShow: false,
+      showAlert: false,
+      alertText: "",
+      IsCollect:this.datas.IsCollect,
+      IsVip:this.datas.IsVip,
+
     };
   },
   methods: {
     //  向编辑器中构建素材
-    randerMaterial(event) {
-      if (this.type == "template" || this.type == "designTemplate") {
+    renderMaterial(event) {
+      if (this.datas.IfSystem == 1) {
         return false;
       } else if (
         $(".sidebar")
@@ -161,38 +182,126 @@ export default {
         }
       }
     },
-        // 删除选中框
-   clearselectline() {
-        $(this.ue.body).find(".checkSelected").removeClass("checkSelected");
+    // 删除选中框
+    clearselectline() {
+      $(this.ue.body)
+        .find(".checkSelected")
+        .removeClass("checkSelected");
     },
-        //秒刷代码
+    //秒刷代码
     secondBrush(_this) {
-        var rangeLength = this.ue.selection.getRange().endOffset;
-        var textLength = _this.find("p").length;
-        var imgLength = _this.find("img.KolImg").length;
-        var startIndex = 0;
-        var imgIndex = 0;
-        var innertext = _this.html();
-        this.ue.selection.getRange().adjustmentBoundary().traversal(function(node) {
-            var isHasImg = 0;
-            if (node.localName == "img" || $(node).find("img").length > 0) {
-                var imgsrc = node.currentSrc ? node.currentSrc : $(node).find("img").attr("src");
-                _this.find("img.KolImg").eq(imgIndex).attr("src", imgsrc);
-                isHasImg = 1;
-                imgIndex++;
-            } else {
-                if (node.localName != "br" && $.trim(node.textContent) != "") {
-                    if (startIndex >= textLength) {
-                        var beforeStyle = _this.find("p:last").attr("style");
-                        _this.find("p:last").after('<p style="' + beforeStyle + '">' + node.textContent + '</p>');
-                    } else {
-                        _this.find("p").eq(startIndex).html(node.textContent);
-                    }
-                    startIndex++;
-                }
+      var rangeLength = this.ue.selection.getRange().endOffset;
+      var textLength = _this.find("p").length;
+      var imgLength = _this.find("img.KolImg").length;
+      var startIndex = 0;
+      var imgIndex = 0;
+      var innertext = _this.html();
+      this.ue.selection
+        .getRange()
+        .adjustmentBoundary()
+        .traversal(function(node) {
+          var isHasImg = 0;
+          if (node.localName == "img" || $(node).find("img").length > 0) {
+            var imgsrc = node.currentSrc
+              ? node.currentSrc
+              : $(node)
+                  .find("img")
+                  .attr("src");
+            _this
+              .find("img.KolImg")
+              .eq(imgIndex)
+              .attr("src", imgsrc);
+            isHasImg = 1;
+            imgIndex++;
+          } else {
+            if (node.localName != "br" && $.trim(node.textContent) != "") {
+              if (startIndex >= textLength) {
+                var beforeStyle = _this.find("p:last").attr("style");
+                _this
+                  .find("p:last")
+                  .after(
+                    '<p style="' +
+                      beforeStyle +
+                      '">' +
+                      node.textContent +
+                      "</p>"
+                  );
+              } else {
+                _this
+                  .find("p")
+                  .eq(startIndex)
+                  .html(node.textContent);
+              }
+              startIndex++;
             }
-        })
-        this.ue.execCommand('inserthtml', '<section  class="KolEditor">' + _this.html() + '</section>');
+          }
+        });
+      this.ue.execCommand(
+        "inserthtml",
+        '<section  class="KolEditor">' + _this.html() + "</section>"
+      );
+    },
+    // 分块使用
+    showTemplateAllSection() {
+      this.fold = false;
+      const self = this;
+      // 为分块绑定事件
+      $(document)
+        .off("mouseenter.part")
+        .on(
+          "mouseenter.part",
+          ".partContent .KolEditor:first .KolEditor",
+          function() {
+            $(this).css("position", "relative");
+            $(this).append(
+              '<section class="usePart" style="position:absolute;left:-10px;top:-10px;width:calc(100% + 20px);height:calc(100% + 20px);background-color:rgba(0,0,0,0.4);z-index:88;border-radius:4px;"><i class="fa fa-arrow-circle-o-right" data-type="fa-arrow-circle-o-right" style="cursor:pointer;font-size:40px;color:#fff;display:inline-block;position:absolute;left:50%;top:50%;margin-left:-20px;margin-top:-20px;"></i></section>'
+            );
+            $(".usePart").click(function(event) {
+              var range = self.ue.selection.getRange().cloneContents();
+              var _this = $(this).parents(".KolEditor:first");
+              $(this).remove();
+              if (range != null) {
+                secondBrush(_this.clone());
+              } else {
+                self.ue.execCommand(
+                  "inserthtml",
+                  '<section class="KolEditor">' + _this.html() + "</section>"
+                );
+              }
+            });
+          }
+        );
+
+      $(document).on(
+        "mouseleave",
+        ".partContent .KolEditor:first .KolEditor",
+        function() {
+          $(this)
+            .find(".usePart")
+            .remove();
+        }
+      );
+    },
+    // 退出分块使用
+    quitUsePart() {
+      this.fold = true;
+    },
+    useAll: function() {
+      if (this.datas.IsVip) {
+        this.ue.execCommand("inserthtml", this.datas.html);
+      } else {
+        this.showAlert = true;
+        this.alertText = "成为VIP会员，VIP素材免费用";
+      }
+    },
+    hideAlert() {
+      console.log("goto vippage");
+    },
+    collectItem(){
+      this.IsCollect = !this.IsCollect
+    },
+    hideQrcodeDia(){
+      console.log('close dialog qroce')
     }
   },
   props: {
@@ -201,16 +310,24 @@ export default {
       type: String,
       default: "mertial"
     },
-    isVip: {
-      // 是否是vip
-      type: Boolean,
-      default: false
-    },
     html: {
       // html
       type: String,
       default: ""
+    },
+    datas: {
+      // 全部的data
+      type: Object,
+      default: {}
     }
+  },
+  computed: {
+    isTemplate() {
+      return !!this.datas.IfSystem;
+    },
+  },
+  components: {
+    amAlert,
   }
 };
 </script>
@@ -218,36 +335,8 @@ export default {
 .item {
   margin-top: 10px;
   // 分块使用
-  .usepart {
-    width: 100%;
-    border: 1px solid #a55c15;
-    box-sizing: border-box;
-    background-color: #fff;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 100;
-    .exitPart {
-      height: 48px;
-      background-color: #ebeff5;
-      color: #4c637b;
-      line-height: 48px;
-      button {
-        background-color: transparent;
-        border: none;
-        padding-left: 15px;
-        font-size: 15px;
-        i {
-          display: inline-block;
-          margin-right: 10px;
-        }
-      }
-    }
-    .partContent {
-      overflow-x: hidden;
-      overflow-y: auto;
-      padding: 15px;
-    }
+  .templateCover {
+    vertical-align: middle;
   }
 }
 i.media {
@@ -314,10 +403,13 @@ i.fa-times {
     position: relative;
     overflow: hidden;
     background: #fff;
-    padding: 5px 10px;
+    padding: 10px 10px;
     cursor: pointer;
     min-height: 60px;
-    border-radius: 5px;
+    border-radius: 2px;
+    border-top: none;
+    margin-bottom: 4px;
+    overflow: hidden;
     transition: background, 0.3s, ease;
     &.designTemplate,
     &.template {
@@ -367,7 +459,6 @@ i.fa-times {
       top: 0px;
       left: 0px;
       z-index: 88;
-      display: none;
       > p {
         display: flex;
         justify-content: space-around;
@@ -404,6 +495,7 @@ i.fa-times {
     }
   }
 }
+
 .mytemplate {
   border-width: 1px;
   border-color: rgb(230, 230, 230);
@@ -490,4 +582,11 @@ qqmusic:after {
   display: block;
   text-align: left;
 }
+ .icon-VIP{
+   color: #ef2a36;
+   font-size: 35px;
+   position: absolute;
+   top: 0;
+   right: 7px;
+ }
 </style>

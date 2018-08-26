@@ -4,15 +4,15 @@
     <div class="navbar">
       <div class="nbContent">
         <div class="designer-view-mid">
-          <button class="btn preview-btn" title="预览">
+          <button class="btn preview-btn" title="预览" @click="preview">
             <span class="icon"></span>
             <span class="title">预览</span>
           </button>
-          <button class="btn qrCode-btn" title="二维码">
+          <button class="btn qrCode-btn" title="二维码" @click="showQrcode">
             <span class="icon"></span>
             <span class="title">二维码</span>
           </button>
-          <button class="btn release-btn" title="发布" @click="loginShow">
+          <button class="btn release-btn" title="发布" @click="publish4Article">
             <span class="icon"></span>
             <span class="title">发布</span>
           </button>
@@ -20,24 +20,51 @@
       </div>
     </div>
     <login-dialog :show.sync="showLoginDialog" />
+    <am-publish :show.sync="showPublishPage" />
+    <am-preview :show.sync="showPreview" />
+    <am-qrcode-dialog :show.sync="qrcodeDia" v-model="qrcodeImg" @close="hideQrcodeDia" />
   </div>
 
 </template>
 
 <script>
 import LoginDialog from "../components/LoginDialog";
+import amQrcodeDialog from "../components/BaseQrcodeDialog";
+import amPublish from "../components/PublishArticle";
+import amPreview from "../components/PhonePreview";
 export default {
   data() {
     return {
-      showLoginDialog: false
+      showLoginDialog: false,
+      qrcodeDia: false,
+      qrcodeImg: "",
+      showPublishPage: false,
+      showPreview: false
     };
   },
   methods: {
     loginShow() {
       this.showLoginDialog = true;
+    },
+    showQrcode() {
+      this.qrcodeDia = true;
+    },
+    hideQrcodeDia() {
+      // 隐藏了二维码弹框
+    },
+    publish4Article() {
+      this.showPublishPage = true;
+    },
+    preview() {
+      this.showPreview = true;
     }
   },
-  components: { LoginDialog }
+  components: {
+    LoginDialog,
+    amQrcodeDialog,
+    amPublish,
+    amPreview
+  }
 };
 </script>
 <style lang="scss" scoped>

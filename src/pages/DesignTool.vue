@@ -8,44 +8,40 @@
       <div class="bd list" v-show="toolShow">
         <el-tooltip class="item" effect="dark" content="清空内容" placement="right">
           <p @click="showClearConfirm = true">
-            <i class="iconfont icon-suoding"></i>清空内容
+            <i class="iconfont icon-qingkongshanchu"></i>清空内容
           </p>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="复制全文" placement="right">
           <p @click="copyAllArea">
-            <i class="iconfont icon-xianshikejian"></i>复制全文
+            <i class="iconfont icon-fuzhi"></i>复制全文
           </p>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="文章预览" placement="right">
-          <p @click="copyAllArea">
-            <i class="iconfont icon-qingchu"></i>文章预览
-          </p>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="保存草稿" placement="right">
-          <p @click="copyAllArea">
-            <i class="iconfont icon-yincang"></i>保存草稿
+        <el-tooltip class="item" effect="dark" content="生成长图" placement="right">
+          <p @click="createContentImg">
+            <i class="iconfont icon-tupian"></i>生成长图
           </p>
         </el-tooltip>
 
         <el-tooltip class="item" effect="dark" content="上传图片" placement="right">
           <p @click="copyAllArea">
-            <i class="iconfont icon-jiesuo"></i>上传图片
+            <i class="iconfont icon-icon-"></i>上传图片
           </p>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="导入文章" placement="right">
           <p @click="copyAllArea">
-            <i class="iconfont icon-wangge"></i>导入文章
+            <i class="iconfont icon-daoru"></i>导入文章
           </p>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="保存模板" placement="right">
           <p @click="copyAllArea">
-            <i class="iconfont icon-Eliminate"></i>保存模板
+            <i class="iconfont icon-baocun"></i>保存模板
           </p>
         </el-tooltip>
       </div>
     </div>
     <am-confirm :show.sync="showClearConfirm" v-model="ClearConfirmText" @ensure="clearAllArea" type="warning" />
     <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
+    <am-alert :show.sync="showAlertCopy" v-model="alertTextCopy"  type="error" />
   </div>
 
 </template>
@@ -53,6 +49,8 @@
 <script>
 import amConfirm from "../components/BaseConfirm";
 import amAlert from "../components/BaseAlert";
+import html2canvas from "html2canvas";
+import parseHtml from "../components/PhonePreivewParseHtml";
 
 export default {
   data() {
@@ -62,7 +60,9 @@ export default {
       showClearConfirm: false,
       ClearConfirmText: "确认清空内容吗",
       showAlert: false,
-      alertText: ""
+      alertText: "",
+      showAlertCopy:false,
+      alertTextCopy:'请先选中编辑器中的一个元素'
     };
   },
   methods: {
@@ -72,6 +72,7 @@ export default {
     },
     copyAllArea() {
       const self = this;
+      if(!this.$material) this.showAlertCopy=true;
       this.ue.selection
         .getRange()
         .selectNode(this.$material.get(0))
@@ -92,6 +93,33 @@ export default {
         self.alertText =
           "复制出错！请检查是否安装flash或者选中后在编辑区用ctrl+c试试吧！";
         self.showAlert = true;
+      });
+    },
+    createContentImg() {
+      let parseEditorHtml = new parseHtml(true, this.ue);
+      let content = parseEditorHtml.getEditorHtml(true);
+      // var TargetNode = $("#material-container")
+      var cloneDom = $(content);
+      cloneDom.css({
+        position: "absolute",
+        top: "0px",
+        "z-index": "-1",
+        height: "auto",
+        width: "500px"
+      });
+      $("body").css({ overflow: "auto" });
+      //将克隆节点动态追加到body后面。
+      $("body").append(cloneDom);
+      html2canvas(cloneDom[0], {
+        useCORS: true,
+        logging: false
+      }).then(canvas => {
+        var imgUri = canvas
+          .toDataURL("image/png")
+          .replace("image/png", "image/octet-stream"); // 获取生成的图片的url
+        window.location.href = imgUri;
+        cloneDom.remove();
+        $("body").css({ overflow: "hidden" });
       });
     }
   },

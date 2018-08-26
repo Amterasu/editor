@@ -16,8 +16,8 @@ export default {
       material: null, // 目标素材的最高级容器 就是单个素材的区域
       attributes: {}, // 点击元素的所有支持修改的属性
       selectStyleTarget: null, // 设置成选中区域的目标。 如果是图片则图片设置选中，否则根节点设置选中，获取属性时也会用这个
-      msg:
-        '<h2><img src="http://img.baidu.com/hi/jx2/j_0003.gif"/>Vue2.x + UEditor + v-model双向绑定</h2>'
+      selectedType: "text", // 选中区域的类型
+      msg: ""
     };
   },
   methods: {
@@ -64,7 +64,13 @@ export default {
       $(this.ue.body)
         .find(".checkSelected")
         .removeClass("checkSelected");
-      $(this.selectStyleTarget).addClass("checkSelected");
+      if (this.selectedType == "img") {
+        $(this.selectStyleTarget)
+          .parent()
+          .addClass("checkSelected");
+      } else {
+        $(this.selectStyleTarget).addClass("checkSelected");
+      }
     },
     computedMaterial_nodes() {
       let self = this;
@@ -87,9 +93,10 @@ export default {
       // 判断点击素材的类型
       if (this.$currTarget.tagName.toLowerCase() === "img") {
         this.selectStyleTarget = this.$currTarget;
+        this.selectedType = "img";
         // 只包含图片
         // 获取点击元素的属性
-        this.getToolBarData('img');
+        this.getToolBarData("img");
         this.SET_TOOL_BAR({
           toolBarType: "img",
           cssRulers: this.attributes
@@ -97,7 +104,7 @@ export default {
       } else {
         // 包含文字
         // 获取点击元素的属性
-        this.getToolBarData('text');
+        this.getToolBarData("text");
         for (var i = 0; i < this.material_nodes.length; i++) {
           var nodeType = this.material_nodes[i].childNodes[0]
             ? this.material_nodes[i].childNodes[0].nodeType
@@ -109,6 +116,7 @@ export default {
               toolBarType: "text",
               cssRulers: this.attributes
             });
+            this.selectedType = "text";
             break;
           }
         }
@@ -116,9 +124,7 @@ export default {
     },
     getToolBarData(type) {
       const eventSelection =
-        type == "text"
-          ? this.ue.selection.getStart()
-          : this.selectStyleTarget;
+        type == "text" ? this.ue.selection.getStart() : this.selectStyleTarget;
       const transforms = !!eventSelection.style.transform
         ? eventSelection.style.transform.split(" ")
         : [];

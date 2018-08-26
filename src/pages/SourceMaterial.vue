@@ -7,11 +7,12 @@
           <span>{{item.title}}</span>
         </div>
       </div>
-      <div class="material-container">
-        <material-item v-for="item in renderList" :key="item.id" :html="item.html"/>
+      <div class="material-container" id="material-container">
+        <material-item v-for="item in renderList" :key="item.id" :html="item.html" :datas="item" />
       </div>
     </mu-paper>
   </div>
+  
 </template>
 
 <script>
@@ -34,7 +35,11 @@ export default {
                 </section></section><section class="KolEditor"><section style="margin: 10px;display: flex;align-items: center;"><section style="flex: 1;padding-top: 10px;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144124840260c0b1dd559b9b14983d5444ffe.jpeg);background-repeat: no-repeat;"><section style="margin-left: -10px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415d170988699c36e6d2b0c4e3e40a3a827.jpeg" style="max-width:100%;margin:0px auto;vertical-align: bottom" class="KolImg"></section></section><section style="flex: 1;padding-left:10px; "><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">立足抗灾夺丰收，防涝抗旱两打算。 夏播作物间定苗，追肥治虫狠锄田。 春苗中耕带培土，防治病虫严把关。 棉花进入花铃期，修治追耪酌情灌。</p>
                     </section></section></section><section class="KolEditor"><section style="margin:10px auto;display: flex;flex-direction: column;align-items: flex-end;"><section style="width: 150px;height: 150px;border-radius: 50%;overflow: hidden;transform: rotate(0deg);"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441537ba0daafdd234457909c8ce13fe1d77.jpeg" style="max-width:100%;margin:0px auto;vertical-align: bottom" class="KolImg"></section><section style="border-top: 1px solid #3fab24;display: flex;align-items: flex-start;margin-top: -40px;"><section style="flex: 1;padding-top: 20px;padding-right: 50px;padding-left: 10px;"><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">雨季造林好时机，精细认真管果园，冬修榆树夏修桑，修整白杨于伏天。村村户户沤绿肥，肥堆如山麦增产。</p>
                         </section><section style="width: 70px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415c32d7c2ac81f614376ddcdc48c3eda9d.png" style="max-width:100%;margin:0px auto;vertical-align: bottom"></section></section></section></section><section class="KolEditor"><section style="margin:10px auto;"><section style="margin: 0px auto;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441307d8050902e5b3e704b8d925aa9af355.png);background-repeat: no-repeat;background-size: 210px auto;height: 155px;box-sizing: border-box;padding-top: 15px;background-position: center top;"><section style="width: 120px;overflow:hidden;margin: 0px auto;border-radius: 6px;overflow: hidden;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415d9dea106ff0284482dcc9f62d8a0e415.jpeg" style="max-width:100%;vertical-align:bottom; " class="KolImg "></section></section></section></section></section></section>`
-        ,id:1
+        ,id:1,
+        IfSystem:1,
+        Cover:'http://editor-statics.oss-cn-beijing.aliyuncs.com/template/20180813/1534155945301107.jpeg',
+        IsVip:1,
+        IsCollect:1,
         }
       ],
       navList: [
