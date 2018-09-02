@@ -29,6 +29,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .editor-main {
-  margin-top: 36px;
+  margin-top: 50px;
 }
 </style>

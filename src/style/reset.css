@@ -1,8 +1,7 @@
 @charset "UTF-8";
+
 /*-- 当前变量 --*/
-
 /* @import url(wxCode.css); */
-
 html,
 body,
 div,
@@ -141,4 +140,15 @@ select:-webkit-autofill {
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
+}
+
+.el-notification.right {
+  /* right: 16px; */
+  width: 190px;
+  height: 52px;
+}
+.el-notification__content{
+  font-size: 12px;
+  margin: 0!important;
+  line-height: 25px!important;
 }

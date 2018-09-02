@@ -103,6 +103,7 @@ ParseEditorHtml.prototype.parseLKEditorHtml = function (html, outer_falg) {
         'max-width': '100%',
         "height": "auto"
       });
+      jQuery(this).attr('crossOrigin','anonymous')
       return;
     } else if (this.tagName == "STRONG" || this.tagName == "SPAN" || this.tagName == "B" || this.tagName == "EM" || this.tagName == "I") {
       return;

@@ -37,11 +37,30 @@
             <i class="iconfont icon-baocun"></i>保存模板
           </p>
         </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="预览" placement="right">
+          <p @click="preview">
+            <i class="iconfont icon-yulan"></i>预览
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="二维码" placement="right">
+          <p @click="showQrcode">
+            <i class="iconfont icon-saoma"></i>二维码
+          </p>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="发布" placement="right">
+          <p @click="publish4Article">
+            <i class="iconfont icon-fabu"></i>发布
+          </p>
+        </el-tooltip>
       </div>
     </div>
     <am-confirm :show.sync="showClearConfirm" v-model="ClearConfirmText" @ensure="clearAllArea" type="warning" />
     <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
-    <am-alert :show.sync="showAlertCopy" v-model="alertTextCopy"  type="error" />
+    <am-alert :show.sync="showAlertCopy" v-model="alertTextCopy" type="error" />
+    <login-dialog :show.sync="showLoginDialog" />
+    <am-publish :show.sync="showPublishPage" />
+    <am-preview :show.sync="showPreview" />
+    <am-qrcode-dialog :show.sync="qrcodeDia" v-model="qrcodeImg" @close="hideQrcodeDia" />
   </div>
 
 </template>
@@ -51,7 +70,10 @@ import amConfirm from "../components/BaseConfirm";
 import amAlert from "../components/BaseAlert";
 import html2canvas from "html2canvas";
 import parseHtml from "../components/PhonePreivewParseHtml";
-
+import LoginDialog from "../components/LoginDialog";
+import amQrcodeDialog from "../components/BaseQrcodeDialog";
+import amPublish from "../components/PublishArticle";
+import amPreview from "../components/PhonePreview";
 export default {
   data() {
     return {
@@ -61,8 +83,13 @@ export default {
       ClearConfirmText: "确认清空内容吗",
       showAlert: false,
       alertText: "",
-      showAlertCopy:false,
-      alertTextCopy:'请先选中编辑器中的一个元素'
+      showAlertCopy: false,
+      alertTextCopy: "请先选中编辑器中的一个元素",
+      showLoginDialog: false,
+      qrcodeDia: false,
+      qrcodeImg: "",
+      showPublishPage: false,
+      showPreview: false
     };
   },
   methods: {
@@ -72,7 +99,7 @@ export default {
     },
     copyAllArea() {
       const self = this;
-      if(!this.$material) this.showAlertCopy=true;
+      if (!this.$material) this.showAlertCopy = true;
       this.ue.selection
         .getRange()
         .selectNode(this.$material.get(0))
@@ -121,11 +148,30 @@ export default {
         cloneDom.remove();
         $("body").css({ overflow: "hidden" });
       });
+    },
+    loginShow() {
+      this.showLoginDialog = true;
+    },
+    showQrcode() {
+      this.qrcodeDia = true;
+    },
+    hideQrcodeDia() {
+      // 隐藏了二维码弹框
+    },
+    publish4Article() {
+      this.showPublishPage = true;
+    },
+    preview() {
+      this.showPreview = true;
     }
   },
   components: {
     amConfirm,
-    amAlert
+    amAlert,
+    LoginDialog,
+    amQrcodeDialog,
+    amPublish,
+    amPreview
   }
 };
 </script>
@@ -136,7 +182,7 @@ export default {
 // 工具箱
 #tools {
   position: fixed;
-  top: 37px;
+  top: 52px;
   right: 277px;
   width: 105px;
   z-index: 2009;
