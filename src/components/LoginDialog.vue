@@ -305,6 +305,7 @@ export default {
         this.setUserInfo(status);
         this.close();
         notice.success("登录成功");
+        this.$emit("loginSuccess");
       } else {
         if (self[whichTimeout] == 0) {
           // 二维码过期
@@ -383,6 +384,7 @@ export default {
       this.setUserInfo(loginStatus);
       this.close();
       notice.success("登录成功");
+      this.$emit("loginSuccess");
     }
   },
   computed: {

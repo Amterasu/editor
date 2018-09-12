@@ -49,7 +49,7 @@
 
       </div>
     </div>
-    <login-dialog :show.sync="showLoginDialog" />
+    <login-dialog :show.sync="showLoginDialog" @loginSuccess="loginSuccess"/>
     <am-publish :show.sync="showPublishPage" />
     <am-preview :show.sync="showPreview" />
     <am-qrcode-dialog :show.sync="qrcodeDia" v-model="qrcodeImg" @close="hideQrcodeDia" />
@@ -80,6 +80,9 @@ export default {
     ...mapMutations("user", ["SET_USER_INFO"]),
     loginShow() {
       this.showLoginDialog = true;
+    },
+    loginSuccess(){
+      // 登陆成功的回调，去处理一些事务
     },
     showPersonalModel() {
       this.personalModel = !this.personalModel;

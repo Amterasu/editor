@@ -2,46 +2,39 @@
   <div class="editor-left">
     <mu-paper class="material-menu">
       <div class="material-nav">
-        <div class="nav-btn" v-for="item in navList" :key="item.index" @click="currNav = item.index" :class="{'active' : item.index == currNav}">
-          <i class="material-icons">{{item.icon}}</i>
-          <span>{{item.title}}</span>
+        <div class="nav-btn" v-for="item in navList" :key="item.class_id" @click="changeNav(item.class_id)" :class="{'active' : item.class_id == currNav}">
+          <i class="material-icons">{{icon(item.class_id)}}</i>
+          <span>{{item.class_name}}</span>
         </div>
       </div>
-      <div class="material-container" id="material-container">
-        <material-item v-for="item in renderList" :key="item.id" :html="item.html" :datas="item" />
+      <div class="material-container" id="material-container" ref="renderContainer">
+        <template v-if="renderList.length > 0">
+          <material-item v-for="item in renderList" :key="item.id" :html="item.content" :datas="item" />
+        </template>
+        <el-button class="nomore" type="primary" :loading="contentLoading" style="width:100%;" v-if="!nomore">加载中...</el-button>
+        <el-button class="nomore" type="primary" style="width:100%;" v-if="nomore">没有更多</el-button>
       </div>
     </mu-paper>
   </div>
-  
+
 </template>
 
 <script>
 import MaterialItem from "../components/BaseMaterialContainer";
+import api from "../api/api";
+import {  mapState } from "vuex";
+
 let id = 1000;
 export default {
   data() {
     return {
       open: true,
-      currNav: 8,
-            renderList: [
-        {
-          html: `
-              <section class="KolEditor">
-               <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><section><section class="KolEditor"><section style="margin:10px auto;text-align:center;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114416004a5458a0647d47d47e6434eb1c7a01.jpeg" style="max-width:100%;margin:0px auto;" class="KolImg"></section></section><section class="KolEditor" style="position: relative;"><section style="margin:10px auto;text-align:center;width: 250px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415f1d997ceed4cba273431e720ee6f998b.png" style="max-width:100%;margin:0px auto;" class="KolImg"></section></section><section class="KolEditor" style="position: relative;"><section style="margin:10px auto;text-align:center;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114414b9c3853f4d12a59b2210785311f2e8a4.png" style="max-width:100%;margin:0px auto;" class="KolImg"></section></section><section class="KolEditor" style="position: relative;"><section style="margin: 10px auto;display: flex;justify-content: center;align-items: center;"><section style="width: 25px;transform: rotate(0deg);background-color: #fff;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441500dec80da2513a78754579e58fde91db.png" style="max-width:100%;margin:0px auto;"></section><section style="border: 1px solid #3fab24;padding: 5px;margin: 0px -12px;"><p style="border-top: 1px solid #3fab24;border-bottom: 1px solid #3fab24;font-size: 16px;line-height: 1.5;margin: 0px;padding: 0px 15px;">小暑</p>
-                    </section><section style="width: 25px;background-color: #fff;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415d5de3278a588f0d96ebdb7c4fb8e471e.png" style="max-width:100%;margin:0px auto;"></section></section></section><section class="KolEditor" style="position: relative;"><section style="margin: 10px auto;display: flex;justify-content: center;align-items: flex-start;"><section style="width: 40px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441571923a94f39e1cd15b8886a82a6c9a8f.png" style="max-width:100%;margin:0px auto;"></section><section style="border-top: 1px solid #3fab24;padding-top: 10px;flex: 1;"><section style="border-top: 1px solid #3fab24;padding: 10px;"><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">小暑(Lesser Heat)，二十四节气之第十一节气，每年7月7日或8日视太阳到达黄经105°时为小暑；暑，表示炎热的意思，小暑为小热，还不十分热。意指天气开始炎热，但还没到最热，全国大部分地区基本符合。全国的农作物都进入了茁壮成长阶段，需加强田间管理。</p>
-                        </section></section><section style="width: 40px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144153ee2bf9b525e9f82bc085cd8bfaf4b4b.png" style="max-width:100%;margin:0px auto;"></section></section></section><section class="KolEditor"><section style="margin: 10px auto;border: 1px dashed #3fab24;padding: 8px;"><section style="display: flex;justify-content: space-between;"><section><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114414eab5b7abe4047bcde3e1b023027c18a5.png" style="max-width:100%;margin:0px auto;"></section><section><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441420db1de2d925d068501aa3ed1edf53f2.png" style="max-width:100%;margin:0px auto;"></section></section><section style="border-left: 1px dashed #3fab24;border-right: 1px dashed #3fab24;padding: 0px 20px;margin: 0px 8px;"><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">每年7月7日或8日视太阳到达黄经105°时为小暑（slight heat）。《月令七十二候集解》：“六月节……暑，热也，就热之中分为大小，月初为小，月中为大，今则热气犹小也。”暑，表示炎热的意思，小暑为小热，还不十分热。意指天气开始炎热，但还没到最热，全国大部分地区基本符合。</p>
-                    </section><section style="display: flex;justify-content: space-between;"><section><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114414e08fef9e36248573919a633c486726fb.png" style="max-width:100%;margin:0px auto;"></section><section><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114414cc44289f59b6702f5536acf17c537059.png" style="max-width:100%;margin:0px auto;"></section></section></section></section><section class="KolEditor"><section style="margin:10px auto;text-align:center;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144152a88bef6c23571c084e93a04e4b278b7.png" style="max-width:100%;margin:0px auto;" class="KolImg"></section></section><section class="KolEditor"><section style="margin: 10px auto;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144121fea3b1e56fcdf7ff6bf6cc7c7e77263.png);background-repeat: no-repeat;background-size: auto 100%;height: 45px;background-position: center;"><p style="margin: 0px;font-size: 20px;text-align: center;color: #fff;line-height: 45px;letter-spacing: 2px;padding-left: 6px;">小暑农事</p>
-                </section></section><section class="KolEditor"><section style="margin: 10px auto;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144126a674326218983a179fa2498e4c3a0cd.png);background-repeat: no-repeat;background-size: auto 100%;height: 45px;background-position: center;"><p style="margin: 0px;font-size: 20px;text-align: center;color: #3fab24;line-height: 45px;letter-spacing: 2px;padding-left: 6px;">01</p>
-                </section></section><section class="KolEditor"><section style="margin: 10px;display: flex;align-items: center;"><section style="flex: 1;padding-top: 10px;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/1144124840260c0b1dd559b9b14983d5444ffe.jpeg);background-repeat: no-repeat;"><section style="margin-left: -10px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415d170988699c36e6d2b0c4e3e40a3a827.jpeg" style="max-width:100%;margin:0px auto;vertical-align: bottom" class="KolImg"></section></section><section style="flex: 1;padding-left:10px; "><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">立足抗灾夺丰收，防涝抗旱两打算。 夏播作物间定苗，追肥治虫狠锄田。 春苗中耕带培土，防治病虫严把关。 棉花进入花铃期，修治追耪酌情灌。</p>
-                    </section></section></section><section class="KolEditor"><section style="margin:10px auto;display: flex;flex-direction: column;align-items: flex-end;"><section style="width: 150px;height: 150px;border-radius: 50%;overflow: hidden;transform: rotate(0deg);"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441537ba0daafdd234457909c8ce13fe1d77.jpeg" style="max-width:100%;margin:0px auto;vertical-align: bottom" class="KolImg"></section><section style="border-top: 1px solid #3fab24;display: flex;align-items: flex-start;margin-top: -40px;"><section style="flex: 1;padding-top: 20px;padding-right: 50px;padding-left: 10px;"><p style="margin: 0px;font-size: 15px;line-height: 1.8;color: #3c3c3c;">雨季造林好时机，精细认真管果园，冬修榆树夏修桑，修整白杨于伏天。村村户户沤绿肥，肥堆如山麦增产。</p>
-                        </section><section style="width: 70px;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415c32d7c2ac81f614376ddcdc48c3eda9d.png" style="max-width:100%;margin:0px auto;vertical-align: bottom"></section></section></section></section><section class="KolEditor"><section style="margin:10px auto;"><section style="margin: 0px auto;background-image:url(http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/11441307d8050902e5b3e704b8d925aa9af355.png);background-repeat: no-repeat;background-size: 210px auto;height: 155px;box-sizing: border-box;padding-top: 15px;background-position: center top;"><section style="width: 120px;overflow:hidden;margin: 0px auto;border-radius: 6px;overflow: hidden;"><img src="http://kol-statics.oss-cn-beijing.aliyuncs.com/editor/114415d9dea106ff0284482dcc9f62d8a0e415.jpeg" style="max-width:100%;vertical-align:bottom; " class="KolImg "></section></section></section></section></section></section>`
-        ,id:1,
-        IfSystem:1,
-        Cover:'http://editor-statics.oss-cn-beijing.aliyuncs.com/template/20180813/1534155945301107.jpeg',
-        IsVip:1,
-        IsCollect:1,
-        }
-      ],
+      currNav: 2,
+      timeout: true, // 截流 是否请求数据
+      nomore: false, // 没有更多
+      contentLoading: false, //loading
+      page: 0, // 当前页
+      renderList: [],
       navList: [
         {
           title: "热门",
@@ -86,10 +79,109 @@ export default {
       ]
     };
   },
-  methods: {},
-  computed: {},
+  methods: {
+    // 获取素材分类
+    async getClasses() {
+      let ClassesRes = await api.getMertialClasses();
+      if (ClassesRes.status === 200 && ClassesRes.data.code === "S") {
+        this.navList = ClassesRes.data.msg;
+        this.getList();
+      }
+    },
+    // 获取素材列表
+    async getList() {
+      let params = {
+        page: (this.page = this.page + 1),
+        c: 1,
+        t: this.currNav
+      };
+      let ListRes = await api.getMertialList(params);
+      if (ListRes.status === 200 && ListRes.data.code === "S") {
+        this.renderList = this.renderList.concat(ListRes.data.msg.data);
+        this.contentLoading = false;
+        this.nomore =
+          ListRes.data.msg.current_page * ListRes.data.msg.per_page >=
+          ListRes.data.msg.total;
+      }
+    },
+    // 生成icon
+    icon(class_id) {
+      let icon = "";
+      switch (class_id) {
+        case 1:
+          icon = "subtitles";
+          break;
+        case 2:
+          icon = "text_format";
+          break;
+        case 3:
+          icon = "texture";
+          break;
+        case 4:
+          icon = "subtitles";
+          break;
+        case 5:
+          icon = "favorite";
+          break;
+        case 6:
+          icon = "airline_seat_individual_suite";
+          break;
+        case 7:
+          icon = "dashboard";
+          break;
+        case 8:
+          icon = "people_outline";
+          break;
+        default:
+          break;
+      }
+      return icon;
+    },
+    // 切换导航
+    changeNav(class_id) {
+      this.currNav = class_id;
+      this.resetStatus();
+      this.getList();
+    },
+    // 重制状态
+    resetStatus(){
+      this.renderList = [];
+      this.page = 0;
+      this.timeout = !!1;
+      this.nomore = !!0;
+      this.contentLoading = !!0;
+    },
+    // 滚动加载 300ms截流
+    onScroll() {
+      let that = this;
+      var $this = $(event.currentTarget),
+        viewH = $this.height(), //可见高度
+        contentH = $this.get(0).scrollHeight, //内容高度
+        scrollTop = $this.scrollTop(); //滚动高度
+      if (scrollTop + viewH + 42 >= contentH) {
+        if (this.nomore || this.contentLoading || !this.timeout) return;
+        this.timeout = false;
+        this.contentLoading = true;
+        setTimeout(() => {
+          this.getList();
+        }, 300);
+      }
+    }
+  },
+  computed: {
+    ...mapState("user", ["user"]),
+  },
   components: {
     MaterialItem
+  },
+  created() {
+    this.getClasses();
+    console.log(this.user)
+  },
+  mounted() {
+    document
+      .getElementById("material-container")
+      .addEventListener("scroll", this.onScroll);
   }
 };
 </script>
@@ -158,6 +250,11 @@ export default {
     left: 80px;
     overflow: auto;
     height: calc(100% - 60px);
+  }
+  .nomore {
+    text-align: center;
+    background: #353535;
+    color: #fff;
   }
 }
 </style>

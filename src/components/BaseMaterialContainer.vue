@@ -7,7 +7,7 @@
     <!-- 如果点击分块使用则拆解显示 -->
     <div v-else v-html="html" @click.stop="renderMaterial($event)" :class="{partContent:isTemplate && fold==false}"></div>
     <!-- 收藏按钮 -->
-    <i class="fa media " :class="{'fa-star':IsCollect,'fa-star-o':!IsCollect}" v-show="isTemplate && fold==true" @click="collectItem"></i>
+    <i class="fa media " :class="{'fa-star':IsCollect,'fa-star-o':!IsCollect}" v-show="fold==true" @click="collectItem"></i>
     <!-- 退出分块 -->
     <i aria-hidden="true" class="fa fa-sign-out media" v-show="isTemplate && fold==false" @click="quitUsePart"></i>
     <!-- 是否是vip -->
@@ -17,24 +17,27 @@
       <p>
         <button type="button" class="el-button el-tooltip el-button--default" @click="showTemplateAllSection">
           <span>
-            <i  class="iconfont icon-quanbufenlei"></i>
+            <i class="iconfont icon-quanbufenlei"></i>
             <span>分块使用模板</span>
           </span>
         </button>
         <button type="button" class="el-button el-tooltip el-button--default" @click="useAll">
           <span>
-            <i  aria-hidden="true" class="iconfont icon-quanbu"></i>
+            <i aria-hidden="true" class="iconfont icon-quanbu"></i>
             <span>整套使用模板</span>
           </span>
         </button>
       </p>
     </div>
     <am-alert :show.sync="showAlert" v-model="alertText" @ensure="hideAlert" type="error" />
+    <login-dialog :show.sync="showLoginDialog" />
   </div>
 </template>
  
 <script>
 import amAlert from "../components/BaseAlert";
+import LoginDialog from "../components/LoginDialog";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -43,14 +46,32 @@ export default {
       templateMaskShow: false,
       showAlert: false,
       alertText: "",
-      IsCollect:this.datas.IsCollect,
-      IsVip:this.datas.IsVip,
-
+      IsCollect: this.datas.IsCollect,
+      IsVip: this.datas.is_vip,
+      showLoginDialog: false,
+      event:null,// 这个是当前点击的事件对象，用于登陆后直接把素材放入选区
     };
   },
   methods: {
+    loginShow() {
+      this.showLoginDialog = true;
+    },
+    loginSuccess(type) {
+      // 登陆成功的回调，去处理一些事务
+      // 收藏后登陆，登陆后自动收藏
+      if (type == "collect") this.collectCallback();
+      // vip素材点击后放入编辑器
+      if (type == "open") this.openCallback();
+    },
+    collectCallback() {
+      this.collectItem();
+    },
+    openCallback(){
+      this.renderMaterial(this.event)
+    },
     //  向编辑器中构建素材
     renderMaterial(event) {
+      this.event = event;
       if (this.datas.IfSystem == 1) {
         return false;
       } else if (
@@ -287,8 +308,8 @@ export default {
       this.fold = true;
     },
     useAll: function() {
-      if (this.datas.IsVip) {
-        this.ue.execCommand("inserthtml", this.datas.html);
+      if (this.datas.is_vip) {
+        this.ue.execCommand("inserthtml", this.datas.content);
       } else {
         this.showAlert = true;
         this.alertText = "成为VIP会员，VIP素材免费用";
@@ -297,11 +318,15 @@ export default {
     hideAlert() {
       console.log("goto vippage");
     },
-    collectItem(){
-      this.IsCollect = !this.IsCollect
+    collectItem() {
+      if (!this.isLogin) {
+        this.showLoginDialog = true;
+        return;
+      }
+      this.IsCollect = !this.IsCollect;
     },
-    hideQrcodeDia(){
-      console.log('close dialog qroce')
+    hideQrcodeDia() {
+      console.log("close dialog qroce");
     }
   },
   props: {
@@ -322,12 +347,20 @@ export default {
     }
   },
   computed: {
+    ...mapState("user", ["user"]),
     isTemplate() {
       return !!this.datas.IfSystem;
     },
+    isLogin() {
+      return !!this.user;
+    },
+    isVip() {
+      return !!this.user;
+    }
   },
   components: {
     amAlert,
+    LoginDialog
   }
 };
 </script>
@@ -582,11 +615,11 @@ qqmusic:after {
   display: block;
   text-align: left;
 }
- .icon-VIP{
-   color: #ef2a36;
-   font-size: 35px;
-   position: absolute;
-   top: 0;
-   right: 7px;
- }
+.icon-VIP {
+  color: #ef2a36;
+  font-size: 35px;
+  position: absolute;
+  top: 0;
+  right: 7px;
+}
 </style>

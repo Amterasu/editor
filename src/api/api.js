@@ -34,4 +34,12 @@ export default {
   login4mobile(params) {
     return post(BASEURL + '/api/login', params)
   },
+  // 获取素材列表
+  getMertialList(params) {
+    return post(BASEURL + '/api/mertial/list', params)
+  },
+  // 获取素材分类
+  getMertialClasses() {
+    return post(BASEURL + '/api/mertial/class')
+  },
 }
